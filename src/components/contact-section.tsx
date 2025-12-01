@@ -1,9 +1,40 @@
 "use client";
 
+import { useRef, useState } from "react";
+import emailjs from "@emailjs/browser";
 import { GlowingButton } from "@/components/ui/glowing-button";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, ChevronDown } from "lucide-react";
 
 export function ContactSection() {
+    const form = useRef<HTMLFormElement>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [status, setStatus] = useState<string | null>(null);
+
+    const sendEmail = (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsLoading(true);
+        setStatus(null);
+
+        if (!form.current) return;
+
+        emailjs.sendForm(
+            "service_hs9cygc",
+            "template_d3pcgsp",
+            form.current,
+            "KClTvP1Joaazrsm6s" // Public Key
+        )
+            .then((result) => {
+                console.log(result.text);
+                setStatus("Success! We'll be in touch shortly.");
+                form.current?.reset();
+            }, (error) => {
+                console.log(error.text);
+                setStatus("Something went wrong. Please try again.");
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+    };
     return (
         <section id="contact" className="py-24 bg-background relative z-10">
             <div className="container mx-auto px-6 md:px-12 lg:px-24">
@@ -18,40 +49,44 @@ export function ContactSection() {
 
                     {/* Left: Form */}
                     <div className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm">
-                        <form className="space-y-4">
+                        <form ref={form} onSubmit={sendEmail} className="space-y-4">
                             <div className="grid md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium text-muted-foreground">Name</label>
-                                    <input type="text" className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-primary focus:bg-primary/5 transition-colors" placeholder="John Doe" />
+                                    <input name="user_name" type="text" required className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-primary focus:bg-primary/5 transition-colors" placeholder="John Doe" />
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium text-muted-foreground">Business Name</label>
-                                    <input type="text" className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-primary focus:bg-primary/5 transition-colors" placeholder="Acme Inc." />
+                                    <input name="business_name" type="text" required className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-primary focus:bg-primary/5 transition-colors" placeholder="Acme Inc." />
                                 </div>
                             </div>
 
                             <div className="space-y-2">
                                 <label className="text-sm font-medium text-muted-foreground">City</label>
-                                <input type="text" className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-primary focus:bg-primary/5 transition-colors" placeholder="New York" />
+                                <input name="city" type="text" required className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-primary focus:bg-primary/5 transition-colors" placeholder="New York" />
                             </div>
 
                             <div className="space-y-2">
                                 <label className="text-sm font-medium text-muted-foreground">Phone / Email</label>
-                                <input type="text" className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-primary focus:bg-primary/5 transition-colors" placeholder="john@example.com" />
+                                <input name="contact_info" type="text" required className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-primary focus:bg-primary/5 transition-colors" placeholder="john@example.com" />
                             </div>
 
                             <div className="space-y-2">
                                 <label className="text-sm font-medium text-muted-foreground">Interested in?</label>
-                                <select className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-primary focus:bg-primary/5 transition-colors appearance-none">
-                                    <option>Website Only</option>
-                                    <option>AI Voice Concierge</option>
-                                    <option>Full Package</option>
-                                </select>
+                                <div className="relative">
+                                    <select name="interest" className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-primary focus:bg-primary/5 transition-colors appearance-none cursor-pointer">
+                                        <option value="Website Only" className="bg-[#0A0E14] text-white">Website Only</option>
+                                        <option value="AI Voice Concierge" className="bg-[#0A0E14] text-white">AI Voice Concierge</option>
+                                        <option value="Full Package" className="bg-[#0A0E14] text-white">Full Package</option>
+                                    </select>
+                                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                                </div>
                             </div>
 
-                            <GlowingButton className="w-full justify-center mt-4">
-                                Get Free Demo
+                            <GlowingButton className="w-full justify-center mt-4" disabled={isLoading}>
+                                {isLoading ? "Sending..." : "Get Free Demo"}
                             </GlowingButton>
+                            {status && <p className={`text-center text-sm ${status.includes("Success") ? "text-green-500" : "text-red-500"}`}>{status}</p>}
                         </form>
                     </div>
 

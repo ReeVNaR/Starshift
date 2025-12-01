@@ -4,10 +4,11 @@ import { motion } from "framer-motion";
 import { GlowingButton } from "@/components/ui/glowing-button";
 import { ArrowRight } from "lucide-react";
 import { HeroMascot } from "@/components/hero-mascot";
+import Link from "next/link";
 
 export function CTASection() {
     return (
-        <section id="contact" className="py-24 relative z-10 overflow-hidden">
+        <section id="cta" className="py-24 relative z-10 overflow-hidden">
             {/* Background Glow */}
             <div className="absolute inset-0 bg-gradient-to-t from-primary/10 via-transparent to-transparent pointer-events-none" />
 
@@ -23,9 +24,11 @@ export function CTASection() {
                         <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
                             Let's talk about how AI can transform your business from a local player into a galactic force.
                         </p>
-                        <GlowingButton className="text-xl px-10 py-6">
-                            Schedule a Free Consultation <ArrowRight className="w-6 h-6 ml-2" />
-                        </GlowingButton>
+                        <Link href="#contact">
+                            <GlowingButton className="text-xl px-10 py-6">
+                                Schedule a Free Consultation <ArrowRight className="w-6 h-6 ml-2" />
+                            </GlowingButton>
+                        </Link>
                     </div>
 
                     {/* Sparky Pointing (Reusing HeroMascot but positioned differently or we can just use it as is for now) */}

@@ -42,9 +42,11 @@ export function Navbar() {
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <Button className="bg-primary hover:bg-primary/90 hover:shadow-[0_0_20px_rgba(0,191,255,0.5)] hover:scale-105 transition-all text-white rounded-full px-6 font-semibold">
-                        Book a Demo
-                    </Button>
+                    <Link href="#contact">
+                        <Button className="bg-primary hover:bg-primary/90 hover:shadow-[0_0_20px_rgba(0,191,255,0.5)] hover:scale-105 transition-all text-white rounded-full px-6 font-semibold">
+                            Book a Demo
+                        </Button>
+                    </Link>
                 </div>
             </div>
 

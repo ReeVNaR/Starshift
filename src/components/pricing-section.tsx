@@ -4,11 +4,12 @@ import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GlowingButton } from "@/components/ui/glowing-button";
+import Link from "next/link";
 
 const plans = [
     {
         name: "Website Only",
-        price: "$2,500",
+        price: "₹7,999",
         subtext: "one-time",
         description: "For businesses that need a solid online presence.",
         features: [
@@ -23,8 +24,8 @@ const plans = [
     },
     {
         name: "Website + AI Voice Concierge",
-        price: "$3,500",
-        subtext: "setup + $199/mo",
+        price: "₹14,999",
+        subtext: "setup + ₹999/mo",
         description: "Most popular – turn your site into a real assistant.",
         features: [
             "Everything in Website Only",
@@ -108,11 +109,15 @@ export function PricingSection() {
                             </ul>
 
                             {plan.popular ? (
-                                <GlowingButton className="w-full justify-center">{plan.cta}</GlowingButton>
+                                <Link href="#contact" className="w-full">
+                                    <GlowingButton className="w-full justify-center">{plan.cta}</GlowingButton>
+                                </Link>
                             ) : (
-                                <Button variant="outline" className="w-full rounded-full border-primary text-primary hover:bg-primary hover:text-white py-6 transition-all">
-                                    {plan.cta}
-                                </Button>
+                                <Link href="#contact" className="w-full">
+                                    <Button variant="outline" className="w-full rounded-full border-primary text-primary hover:bg-primary hover:text-white py-6 transition-all">
+                                        {plan.cta}
+                                    </Button>
+                                </Link>
                             )}
                         </motion.div>
                     ))}
