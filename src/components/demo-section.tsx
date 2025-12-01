@@ -35,7 +35,7 @@ export function DemoSection() {
                     {/* Right: Explanation */}
                     <div className="space-y-8">
                         <p className="text-xl text-muted-foreground leading-relaxed">
-                            Hear how your AI voice concierge greets visitors, answers their questions, and captures leads—all in real time.
+                            Hear how your AI voice concierge greets visitors, answers their questions, and captures leads all in real time.
                         </p>
 
                         <div className="space-y-4">

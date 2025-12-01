@@ -12,7 +12,7 @@ const steps = [
     {
         number: "02",
         title: "Build & Connect",
-        description: "We design your website (or integrate into your existing one), set up the AI voice agent, and connect automations using n8n.",
+        description: "We design your website (or integrate into your existing one), set up the AI voice agent, and connect advanced automations.",
         color: "text-secondary"
     },
     {

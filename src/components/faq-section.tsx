@@ -14,7 +14,7 @@ const faqs = [
     },
     {
         question: "Can you integrate with tools I already use?",
-        answer: "Yes. Through n8n, we can connect to many popular tools like Google Workspace, CRMs, email services, and messaging APIs, depending on your stack."
+        answer: "Yes. We can connect to many popular tools like Google Workspace, CRMs, email services, and messaging APIs, depending on your stack."
     },
     {
         question: "Will the AI agent say incorrect things?",

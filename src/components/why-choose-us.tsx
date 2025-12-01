@@ -7,7 +7,7 @@ const reasons = [
     {
         icon: Zap,
         title: "Automation-First Mindset",
-        description: "We don't just build pages; we design systems around your business.",
+        description: "We don't just build pages, we design systems around your business.",
         color: "text-primary"
     },
     {
@@ -19,7 +19,7 @@ const reasons = [
     {
         icon: Wrench,
         title: "Built on Proven Tools",
-        description: "AI voice + n8n workflows that are robust and flexible.",
+        description: "AI voice + advanced workflows that are robust and flexible.",
         color: "text-green-500"
     },
     {

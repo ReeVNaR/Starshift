@@ -33,7 +33,7 @@ const features = [
         color: "text-green-500"
     },
     {
-        title: "Integrations Through n8n",
+        title: "Seamless Integrations",
         description: "Connect to Google Sheets, Gmail, CRMs, messaging APIs, and more.",
         icon: Share2,
         size: "large",

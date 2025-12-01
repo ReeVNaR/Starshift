@@ -43,7 +43,7 @@ const plans = [
         subtext: "contact for details",
         description: "For teams that want deeper workflows.",
         features: [
-            "Custom n8n automations",
+            "Custom advanced automations",
             "Multi-step flows (booking, etc.)",
             "Integration with CRMs & APIs",
             "Priority support and consultation",
@@ -76,8 +76,8 @@ export function PricingSection() {
                             transition={{ delay: index * 0.1 }}
                             viewport={{ once: true }}
                             className={`relative p-8 rounded-3xl border ${plan.popular
-                                    ? "bg-white/10 border-primary shadow-[0_0_40px_rgba(0,191,255,0.15)] scale-105 z-10"
-                                    : "bg-white/5 border-white/10"
+                                ? "bg-white/10 border-primary shadow-[0_0_40px_rgba(0,191,255,0.15)] scale-105 z-10"
+                                : "bg-white/5 border-white/10"
                                 } backdrop-blur-md flex flex-col h-full`}
                         >
                             {plan.popular && (

@@ -19,7 +19,7 @@ export function HeroSection() {
                     </h1>
 
                     <p className="text-lg text-muted-foreground max-w-xl leading-relaxed">
-                        We build conversion-focused websites powered by AI voice agents and automations, so your business can greet, answer, and book customers on autopilot — day and night.
+                        We build conversion-focused websites powered by AI voice agents and automations, so your business can greet, answer, and book customers on autopilot 24/7.
                     </p>
 
                     <div className="space-y-3">
@@ -29,7 +29,7 @@ export function HeroSection() {
                         </div>
                         <div className="flex items-center gap-3 text-muted-foreground">
                             <Settings className="w-5 h-5 text-primary" />
-                            <span className="font-medium">Workflow Automations with n8n</span>
+                            <span className="font-medium">Workflow Automations with Starshift</span>
                         </div>
                         <div className="flex items-center gap-3 text-muted-foreground">
                             <Globe className="w-5 h-5 text-primary" />

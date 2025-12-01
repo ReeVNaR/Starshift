@@ -26,7 +26,7 @@ const pillars = [
     },
     {
         icon: Settings,
-        title: "Automation Hub (n8n)",
+        title: "Automation Hub",
         color: "text-green-500",
         points: [
             "Every lead is pushed into your chosen tools",
