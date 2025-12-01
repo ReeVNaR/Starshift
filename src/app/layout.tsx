@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 
@@ -32,6 +33,9 @@ export default function RootLayout({
         className={`${inter.variable} ${poppins.variable} antialiased bg-background text-foreground`}
       >
         {children}
+        {/* @ts-expect-error Custom element */}
+        <elevenlabs-convai agent-id="agent_9501kbdjgv8peh7ahp5pm7jvhs4h"></elevenlabs-convai>
+        <Script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async />
       </body>
     </html>
   );

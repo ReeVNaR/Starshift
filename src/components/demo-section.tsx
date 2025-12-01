@@ -26,7 +26,16 @@ export function DemoSection() {
                             <h3 className="text-2xl font-bold mb-2">Watch 1-Min Demo</h3>
                             <p className="text-muted-foreground mb-8">See how the AI handles a real customer call.</p>
 
-                            <GlowingButton className="w-full justify-center text-lg py-6">
+                            <GlowingButton
+                                className="w-full justify-center text-lg py-6"
+                                onClick={() => {
+                                    const widget = document.querySelector("elevenlabs-convai");
+                                    const button = widget?.shadowRoot?.querySelector("button");
+                                    if (button) {
+                                        (button as HTMLElement).click();
+                                    }
+                                }}
+                            >
                                 Try Live Demo
                             </GlowingButton>
                         </div>

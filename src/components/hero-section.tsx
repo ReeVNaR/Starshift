@@ -67,9 +67,16 @@ export function HeroSection() {
 
                     {/* Center Core */}
                     <motion.div
-                        className="relative z-20 w-32 h-32 bg-primary/10 rounded-full flex items-center justify-center backdrop-blur-md border border-primary/20 shadow-[0_0_50px_rgba(0,191,255,0.2)]"
+                        className="relative z-20 w-32 h-32 bg-primary/10 rounded-full flex items-center justify-center backdrop-blur-md border border-primary/20 shadow-[0_0_50px_rgba(0,191,255,0.2)] cursor-pointer hover:bg-primary/20 transition-colors"
                         animate={{ scale: [1, 1.05, 1] }}
                         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                        onClick={() => {
+                            const widget = document.querySelector("elevenlabs-convai");
+                            const button = widget?.shadowRoot?.querySelector("button");
+                            if (button) {
+                                (button as HTMLElement).click();
+                            }
+                        }}
                     >
                         <div className="absolute inset-0 rounded-full border border-primary/30 animate-ping opacity-20" />
                         <Mic className="w-12 h-12 text-primary" />
