@@ -6,6 +6,8 @@ import { GlowingButton } from "@/components/ui/glowing-button";
 import { Mic, Settings, Globe, Zap, MessageSquare, BarChart } from "lucide-react";
 import Link from "next/link";
 
+import { SmoothScrollLink } from "@/components/ui/smooth-scroll-link";
+
 export function HeroSection() {
     return (
         <section className="relative min-h-[90vh] flex items-center pt-24 pb-12 px-6 md:px-12 lg:px-24 overflow-hidden">
@@ -38,16 +40,14 @@ export function HeroSection() {
                     </div>
 
                     <div className="flex flex-wrap items-center gap-4 pt-4">
-                        <Link href="#contact">
+                        <SmoothScrollLink href="#contact">
                             <GlowingButton className="px-8 py-6 text-base font-semibold">
                                 Book a Free 15 Min Demo
                             </GlowingButton>
-                        </Link>
-                        <Link href="#pricing">
-                            <button className="px-8 py-3.5 text-base font-semibold text-primary border-2 border-primary rounded-full hover:bg-primary/10 hover:scale-105 transition-all">
-                                See Pricing
-                            </button>
-                        </Link>
+                        </SmoothScrollLink>
+                        <SmoothScrollLink href="#pricing" className="px-8 py-3.5 text-base font-semibold text-primary border-2 border-primary rounded-full hover:bg-primary/10 hover:scale-105 transition-all">
+                            See Pricing
+                        </SmoothScrollLink>
                     </div>
                 </div>
 

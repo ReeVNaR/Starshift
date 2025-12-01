@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion, useScroll, useSpring } from "framer-motion";
 
+import { SmoothScrollLink } from "@/components/ui/smooth-scroll-link";
+
 export function Navbar() {
     const { scrollYProgress } = useScroll();
     const scaleX = useSpring(scrollYProgress, {
@@ -35,18 +37,18 @@ export function Navbar() {
 
                 {/* Centered Links */}
                 <div className="hidden md:flex items-center gap-8 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <Link href="#features" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Features</Link>
-                    <Link href="#pricing" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Pricing</Link>
-                    <Link href="#how-it-works" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">How It Works</Link>
-                    <Link href="#faq" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">FAQ</Link>
+                    <SmoothScrollLink href="#features" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Features</SmoothScrollLink>
+                    <SmoothScrollLink href="#pricing" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Pricing</SmoothScrollLink>
+                    <SmoothScrollLink href="#how-it-works" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">How It Works</SmoothScrollLink>
+                    <SmoothScrollLink href="#faq" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">FAQ</SmoothScrollLink>
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <Link href="#contact">
-                        <Button className="bg-primary hover:bg-primary/90 hover:shadow-[0_0_20px_rgba(0,191,255,0.5)] hover:scale-105 transition-all text-white rounded-full px-6 font-semibold">
+                    <Button asChild className="bg-primary hover:bg-primary/90 hover:shadow-[0_0_20px_rgba(0,191,255,0.5)] hover:scale-105 transition-all text-white rounded-full px-6 font-semibold">
+                        <SmoothScrollLink href="#contact">
                             Book a Demo
-                        </Button>
-                    </Link>
+                        </SmoothScrollLink>
+                    </Button>
                 </div>
             </div>
 

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SmoothScrollLink } from "@/components/ui/smooth-scroll-link";
 import { Twitter, Linkedin, Github, Facebook } from "lucide-react";
 
 export function Footer() {
@@ -19,9 +20,9 @@ export function Footer() {
                     <div className="space-y-4">
                         <h4 className="font-semibold text-white">Product</h4>
                         <div className="flex flex-col gap-2">
-                            <Link href="#features" className="text-sm text-muted-foreground hover:text-primary transition-colors">Features</Link>
-                            <Link href="#pricing" className="text-sm text-muted-foreground hover:text-primary transition-colors">Pricing</Link>
-                            <Link href="#how-it-works" className="text-sm text-muted-foreground hover:text-primary transition-colors">How It Works</Link>
+                            <SmoothScrollLink href="#features" className="text-sm text-muted-foreground hover:text-primary transition-colors">Features</SmoothScrollLink>
+                            <SmoothScrollLink href="#pricing" className="text-sm text-muted-foreground hover:text-primary transition-colors">Pricing</SmoothScrollLink>
+                            <SmoothScrollLink href="#how-it-works" className="text-sm text-muted-foreground hover:text-primary transition-colors">How It Works</SmoothScrollLink>
                         </div>
                     </div>
 
@@ -31,7 +32,7 @@ export function Footer() {
                         <div className="flex flex-col gap-2">
                             <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">About Us</Link>
                             <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Blog</Link>
-                            <Link href="#contact" className="text-sm text-muted-foreground hover:text-primary transition-colors">Contact</Link>
+                            <SmoothScrollLink href="#contact" className="text-sm text-muted-foreground hover:text-primary transition-colors">Contact</SmoothScrollLink>
                         </div>
                     </div>
 

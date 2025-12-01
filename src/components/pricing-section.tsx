@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GlowingButton } from "@/components/ui/glowing-button";
-import Link from "next/link";
+import { SmoothScrollLink } from "@/components/ui/smooth-scroll-link";
 
 const plans = [
     {
@@ -109,15 +109,15 @@ export function PricingSection() {
                             </ul>
 
                             {plan.popular ? (
-                                <Link href="#contact" className="w-full">
+                                <SmoothScrollLink href="#contact" className="w-full">
                                     <GlowingButton className="w-full justify-center">{plan.cta}</GlowingButton>
-                                </Link>
+                                </SmoothScrollLink>
                             ) : (
-                                <Link href="#contact" className="w-full">
-                                    <Button variant="outline" className="w-full rounded-full border-primary text-primary hover:bg-primary hover:text-white py-6 transition-all">
+                                <Button asChild variant="outline" className="w-full rounded-full border-primary text-primary hover:bg-primary hover:text-white py-6 transition-all">
+                                    <SmoothScrollLink href="#contact" className="w-full">
                                         {plan.cta}
-                                    </Button>
-                                </Link>
+                                    </SmoothScrollLink>
+                                </Button>
                             )}
                         </motion.div>
                     ))}

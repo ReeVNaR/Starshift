@@ -83,7 +83,7 @@ export function ContactSection() {
                                 </div>
                             </div>
 
-                            <GlowingButton className="w-full justify-center mt-4" disabled={isLoading}>
+                            <GlowingButton tag="button" type="submit" className="w-full justify-center mt-4" disabled={isLoading}>
                                 {isLoading ? "Sending..." : "Get Free Demo"}
                             </GlowingButton>
                             {status && <p className={`text-center text-sm ${status.includes("Success") ? "text-green-500" : "text-red-500"}`}>{status}</p>}
