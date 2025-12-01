@@ -14,8 +14,11 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Starshift | AI SaaS",
+  title: "Starshift",
   description: "The future of AI-powered productivity.",
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 export default function RootLayout({
