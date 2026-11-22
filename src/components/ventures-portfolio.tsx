@@ -1,14 +1,20 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
     ArrowUpRight,
-    ChevronLeft,
-    ChevronRight,
-    LayoutGrid,
-    Orbit,
-    MoveHorizontal
+    ShoppingBag,
+    MessageSquare,
+    Scissors,
+    TrendingUp,
+    Shield,
+    ExternalLink,
+    CheckCircle2,
+    Activity,
+    SlidersHorizontal,
+    Layers,
+    Sparkles
 } from "lucide-react";
 
 export interface Venture {
@@ -22,6 +28,8 @@ export interface Venture {
     features: string[];
     url: string;
     displayUrl: string;
+    accentColor: string;
+    gradient: string;
     note?: string;
 }
 
@@ -32,467 +40,608 @@ export const ventures: Venture[] = [
         name: "TINVO",
         category: "E-Commerce",
         tagline: "A modern D2C shopping experience.",
-        description: "Direct-to-consumer tumbler brand with a dedicated digital store, product discovery, and custom 360° ordering.",
+        description: "TINVO is a direct-to-consumer tumbler brand with a dedicated digital store, featuring interactive 360° product discovery, real-time customization, and friction-free checkout.",
         positioning: "An end-to-end e-commerce experience built for a modern consumer brand.",
         features: [
-            "Product catalogue & 360° view",
-            "Real-time design customization",
-            "Seamless cart & order tracking"
+            "360° interactive product viewer",
+            "Real-time design & engraving customizer",
+            "Frictionless checkout & payment routing",
+            "Customer account & shipment tracking",
+            "Automated return & support portal"
         ],
         url: "https://tinvo.starshift.in",
-        displayUrl: "tinvo.starshift.in"
+        displayUrl: "tinvo.starshift.in",
+        accentColor: "text-sky-400",
+        gradient: "from-sky-500/10 via-cyan-500/5 to-transparent",
     },
     {
         id: "swas",
         number: "02",
         name: "SWAS",
         category: "SaaS / Automation",
-        tagline: "Smarter WhatsApp communication.",
-        description: "WhatsApp business automation platform simplifying bulk messaging, campaign management, and customer lead triage.",
+        tagline: "Smarter WhatsApp communication for businesses.",
+        description: "SWAS (StarShift WA Sender) is a high-volume WhatsApp business communication platform engineered for automated campaign scheduling, chatbot triage, and high-delivery customer engagement.",
         positioning: "A business communication and workflow automation platform that helps organizations streamline customer engagement.",
         features: [
-            "Bulk campaign scheduling & broadcasts",
-            "Automated chatbots & lead capture",
-            "CRM & external API integrations"
+            "Bulk multi-contact campaign broadcasting",
+            "CSV, Excel & Google Sheets database imports",
+            "Automated chatbot logic & lead capture flows",
+            "Instant team inbox & quick canned replies",
+            "REST API integrations with external stacks"
         ],
         url: "https://swas.starshift.in/app",
-        displayUrl: "swas.starshift.in/app"
+        displayUrl: "swas.starshift.in/app",
+        accentColor: "text-emerald-400",
+        gradient: "from-emerald-500/10 via-teal-500/5 to-transparent",
     },
     {
         id: "dadashri",
         number: "03",
         name: "DADASHRI DESIGNERS",
         category: "Business Software",
-        tagline: "Digitizing tailoring business.",
-        description: "Centralized tailor management system organizing customer measurements, order lifecycles, and sales records.",
+        tagline: "Digitizing the traditional tailoring business.",
+        description: "Dadashri Designers is a specialized tailoring ERP and CRM suite that brings manual measurement books, garment order workflows, delivery timelines, and revenue analytics into one centralized digital system.",
         positioning: "A specialized business management solution that brings customer records, tailoring operations, and sales tracking into one organized system.",
         features: [
-            "Digital measurement record vault",
-            "Order status & delivery tracking",
-            "Centralized sales management"
+            "Digital measurement vault with version history",
+            "End-to-end order progress & delivery tracking",
+            "Customer profile & style preference archives",
+            "Automated order milestone SMS alerts",
+            "Centralized sales accounting & ledger"
         ],
         url: "https://dadashri.vercel.app/dashboard",
-        displayUrl: "dadashri.vercel.app"
+        displayUrl: "dadashri.vercel.app/dashboard",
+        accentColor: "text-amber-400",
+        gradient: "from-amber-500/10 via-orange-500/5 to-transparent",
     },
     {
         id: "starshift-algo",
         number: "04",
         name: "STARSHIFT ALGO",
         category: "FinTech",
-        tagline: "Algorithmic trading & automation.",
-        description: "Restricted-access algorithmic trading system automating strategies with predefined market conditions and risk rules.",
-        positioning: "A specialized algorithmic trading system built around systematic strategy execution and predefined risk parameters.",
+        tagline: "Algorithmic trading powered by strategy and automation.",
+        description: "StarShift Algo is an institutional-grade, restricted-access algorithmic execution engine that automates quantitative trading strategies based on VWAP conditions, disciplined risk limits, and sub-second broker APIs.",
+        positioning: "A specialized algorithmic trading system built around systematic strategy execution and predefined risk parameters. Access is limited to authorized users.",
         features: [
-            "VWAP-based strategy execution",
-            "Real-time automated signal monitoring",
-            "Predefined entry, target & stop-loss"
+            "Volume-Weighted Average Price (VWAP) engine",
+            "Continuous market signal surveillance",
+            "Predefined entry, target & dynamic stop-loss",
+            "High-throughput broker API execution",
+            "Multi-layer risk limits & capital safeguards"
         ],
         url: "https://algo.starshift.in/dashboard",
-        displayUrl: "algo.starshift.in",
-        note: "Financial risk applies. Restricted access."
+        displayUrl: "algo.starshift.in/dashboard",
+        accentColor: "text-blue-400",
+        gradient: "from-blue-500/10 via-indigo-500/5 to-transparent",
+        note: "Trading involves financial risk. Access is strictly restricted to authorized clients. Does not imply guaranteed returns or profitability."
     }
 ];
 
-export function VenturesPortfolio() {
-    const [activeIndex, setActiveIndex] = useState(0);
-    const [viewMode, setViewMode] = useState<"ring" | "grid">("ring");
-    const [radius, setRadius] = useState(220);
-    const [cardWidth, setCardWidth] = useState(270);
-    const isDraggingRef = useRef(false);
+// Interactive UI Mockup for TINVO (E-Commerce)
+function TinvoMockup() {
+    const [selectedColor, setSelectedColor] = useState<"cyan" | "obsidian" | "frost">("cyan");
 
-    const count = ventures.length;
-    const angleStep = 360 / count; // 90 degrees
-
-    // Ultra-smooth spring physics for that satisfying glide feel
-    const rotation = useMotionValue(0);
-    const smoothRotation = useSpring(rotation, {
-        stiffness: 140,
-        damping: 24,
-        mass: 0.6,
-    });
-
-    // Proportional barrel geometry to ensure compact, perfect fit on all screens
-    useEffect(() => {
-        const updateDimensions = () => {
-            const w = window.innerWidth;
-            if (w < 400) {
-                // Ultra-small mobile
-                setRadius(140);
-                setCardWidth(220);
-            } else if (w < 640) {
-                // Mobile
-                setRadius(165);
-                setCardWidth(240);
-            } else if (w < 1024) {
-                // Tablet
-                setRadius(200);
-                setCardWidth(260);
-            } else {
-                // Desktop
-                setRadius(240);
-                setCardWidth(280);
-            }
-        };
-
-        updateDimensions();
-        window.addEventListener("resize", updateDimensions);
-        return () => window.removeEventListener("resize", updateDimensions);
-    }, []);
-
-    // Rotate to exact index with shortest angular distance
-    const rotateToIndex = (targetIndex: number) => {
-        setActiveIndex(targetIndex);
-        const currentRot = rotation.get();
-        const currentTargetDeg = -targetIndex * angleStep;
-        
-        const diff = (currentTargetDeg - currentRot) % 360;
-        const normalizedDiff = diff > 180 ? diff - 360 : diff < -180 ? diff + 360 : diff;
-        rotation.set(currentRot + normalizedDiff);
+    const colorConfigs = {
+        cyan: {
+            name: "Cyan Edition",
+            gradient: "from-cyan-400 via-sky-600 to-slate-950",
+            border: "border-cyan-400/60",
+            glow: "shadow-[0_0_22px_rgba(6,182,212,0.35)]",
+            text: "text-cyan-300",
+            textColor: "text-cyan-200"
+        },
+        obsidian: {
+            name: "Obsidian Stealth",
+            gradient: "from-zinc-500 via-zinc-800 to-black",
+            border: "border-zinc-500/50",
+            glow: "shadow-[0_0_22px_rgba(113,113,122,0.3)]",
+            text: "text-zinc-300",
+            textColor: "text-zinc-200"
+        },
+        frost: {
+            name: "Frost Silver",
+            gradient: "from-white via-slate-300 to-slate-600",
+            border: "border-white/70",
+            glow: "shadow-[0_0_22px_rgba(255,255,255,0.3)]",
+            text: "text-slate-100",
+            textColor: "text-slate-900"
+        }
     };
 
-    const nextVenture = () => {
-        rotateToIndex((activeIndex + 1) % count);
-    };
-
-    const prevVenture = () => {
-        rotateToIndex((activeIndex - 1 + count) % count);
-    };
-
-    // Keyboard navigation
-    useEffect(() => {
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (viewMode !== "ring") return;
-            if (e.key === "ArrowRight") nextVenture();
-            if (e.key === "ArrowLeft") prevVenture();
-        };
-
-        window.addEventListener("keydown", handleKeyDown);
-        return () => window.removeEventListener("keydown", handleKeyDown);
-    }, [viewMode, activeIndex]);
+    const current = colorConfigs[selectedColor];
 
     return (
-        <section id="ventures" className="relative pt-14 sm:pt-16 pb-16 sm:pb-20 px-3 sm:px-6 md:px-12 lg:px-24 overflow-hidden border-t border-white/[0.06]">
-            {/* Ambient Lighting */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85vw] max-w-[550px] h-[320px] bg-primary/5 blur-[160px] rounded-full pointer-events-none" />
+        <div className="w-full h-48 sm:h-52 rounded-xl bg-[#090D16] border border-white/[0.08] p-4 flex flex-col justify-between overflow-hidden relative">
+            <div className="flex items-center justify-between text-xs border-b border-white/[0.06] pb-2">
+                <span className="font-mono text-slate-400 flex items-center gap-1.5">
+                    <ShoppingBag className="w-3.5 h-3.5 text-sky-400" />
+                    <span>tinvo.store/customize</span>
+                </span>
+                <span className="text-[10px] uppercase font-semibold text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20">
+                    360° Studio
+                </span>
+            </div>
 
-            <div className="container max-w-5xl mx-auto relative z-10 w-full">
+            <div className="flex items-center justify-between py-2">
+                <div className="space-y-1">
+                    <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                        Stainless Tumbler 750ml
+                    </span>
+                    <p className="text-sm font-bold text-white transition-all duration-200">{current.name}</p>
+                    <p className="text-xs text-sky-400 font-medium">In Stock • Fast Shipping</p>
+                </div>
+
+                {/* Simulated 3D Tumbler Graphic with interactive color */}
+                <div className="relative flex items-center justify-center w-20 h-24">
+                    <motion.div
+                        key={selectedColor}
+                        initial={{ scale: 0.9, opacity: 0.8 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.2 }}
+                        className={`w-10 h-20 rounded-xl bg-gradient-to-b ${current.gradient} border ${current.border} ${current.glow} flex items-center justify-center transition-all duration-300`}
+                    >
+                        <span className={`text-[9px] font-mono font-bold tracking-wider rotate-90 select-none ${selectedColor === "frost" ? "text-slate-900" : "text-white"}`}>
+                            TINVO
+                        </span>
+                    </motion.div>
+                </div>
+            </div>
+
+            {/* Bottom Controls */}
+            <div className="flex items-center justify-between pt-2 border-t border-white/[0.06] text-xs">
+                <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-slate-400">Finish:</span>
+                    <div className="flex items-center gap-1.5">
+                        <button
+                            type="button"
+                            onClick={() => setSelectedColor("cyan")}
+                            title="Cyan Edition"
+                            className={`w-3.5 h-3.5 rounded-full bg-cyan-400 transition-all cursor-pointer ${selectedColor === "cyan" ? "ring-2 ring-white scale-110" : "opacity-50 hover:opacity-80"}`}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setSelectedColor("obsidian")}
+                            title="Obsidian Stealth"
+                            className={`w-3.5 h-3.5 rounded-full bg-zinc-700 transition-all cursor-pointer ${selectedColor === "obsidian" ? "ring-2 ring-white scale-110" : "opacity-50 hover:opacity-80"}`}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setSelectedColor("frost")}
+                            title="Frost Silver"
+                            className={`w-3.5 h-3.5 rounded-full bg-slate-200 transition-all cursor-pointer ${selectedColor === "frost" ? "ring-2 ring-white scale-110" : "opacity-50 hover:opacity-80"}`}
+                        />
+                    </div>
+                </div>
+                <span className="text-[11px] font-mono text-slate-300 bg-white/[0.04] px-2 py-0.5 rounded-lg border border-white/[0.06]">
+                    Cart Checkout Active
+                </span>
+            </div>
+        </div>
+    );
+}
+
+// Interactive UI Mockup for SWAS (WhatsApp Automation)
+function SwasMockup() {
+    const [activeCampaign, setActiveCampaign] = useState<"festive" | "cart">("festive");
+
+    return (
+        <div className="w-full h-48 sm:h-52 rounded-xl bg-[#08120F] border border-emerald-500/20 p-4 flex flex-col justify-between overflow-hidden relative">
+            <div className="flex items-center justify-between text-xs border-b border-emerald-500/15 pb-2">
+                <span className="font-mono text-emerald-300 flex items-center gap-1.5">
+                    <MessageSquare className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>SWAS Automation Engine</span>
+                </span>
+                <span className="text-[10px] font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                    <span>WhatsApp Connected</span>
+                </span>
+            </div>
+
+            {/* Campaign Selector / Chat preview */}
+            <div className="space-y-1.5 py-1 text-xs">
+                {activeCampaign === "festive" ? (
+                    <>
+                        <div className="bg-emerald-950/60 border border-emerald-500/20 rounded-xl p-2 max-w-[85%] text-slate-300">
+                            <p className="text-[10px] text-emerald-400 font-semibold mb-0.5">Campaign: Festive Broadcast #2</p>
+                            <p className="text-[11px] text-slate-200">Hi Alex! Your personalized VIP access link is ready.</p>
+                        </div>
+                        <div className="bg-white/[0.03] border border-white/[0.08] rounded-xl p-2 max-w-[80%] ml-auto text-slate-300 text-right">
+                            <p className="text-[11px] text-slate-200">Awesome! Just completed checkout.</p>
+                            <span className="text-[9px] text-emerald-400 font-mono">✓✓ Delivered</span>
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <div className="bg-emerald-950/60 border border-emerald-500/20 rounded-xl p-2 max-w-[85%] text-slate-300">
+                            <p className="text-[10px] text-emerald-400 font-semibold mb-0.5">Automated Recovery Bot</p>
+                            <p className="text-[11px] text-slate-200">Hey Sarah! You left 1 tumbler in cart. Use code STAR10.</p>
+                        </div>
+                        <div className="bg-white/[0.03] border border-white/[0.08] rounded-xl p-2 max-w-[80%] ml-auto text-slate-300 text-right">
+                            <p className="text-[11px] text-slate-200">Order confirmed. Thanks!</p>
+                            <span className="text-[9px] text-emerald-400 font-mono">✓✓ Recovered</span>
+                        </div>
+                    </>
+                )}
+            </div>
+
+            <div className="flex items-center justify-between pt-2 border-t border-emerald-500/15 text-[11px] text-slate-400">
+                <div className="flex items-center gap-1.5">
+                    <button
+                        type="button"
+                        onClick={() => setActiveCampaign("festive")}
+                        className={`text-[10px] px-2 py-0.5 rounded cursor-pointer transition-colors ${activeCampaign === "festive" ? "bg-emerald-500/20 text-emerald-300 font-medium" : "text-slate-500 hover:text-slate-300"}`}
+                    >
+                        Broadcast
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => setActiveCampaign("cart")}
+                        className={`text-[10px] px-2 py-0.5 rounded cursor-pointer transition-colors ${activeCampaign === "cart" ? "bg-emerald-500/20 text-emerald-300 font-medium" : "text-slate-500 hover:text-slate-300"}`}
+                    >
+                        Auto-Recovery
+                    </button>
+                </div>
+                <span className="text-emerald-400 font-medium font-mono text-[10px]">99.2% Delivery</span>
+            </div>
+        </div>
+    );
+}
+
+// Interactive UI Mockup for DADASHRI DESIGNERS (Business Software)
+function DadashriMockup() {
+    const [selectedOrder, setSelectedOrder] = useState<"vikram" | "aarav">("vikram");
+
+    const orders = {
+        vikram: {
+            id: "#DD-492",
+            client: "Vikram K. Singhania",
+            garment: "3-Piece Tuxedo",
+            status: "In Stitching",
+            delivery: "Nov 28",
+            measurements: { chest: "41.5\"", waist: "35.0\"", length: "30.5\"", sleeve: "25.2\"" }
+        },
+        aarav: {
+            id: "#DD-518",
+            client: "Aarav M. Mehta",
+            garment: "Royal Bandhgala",
+            status: "Cutting Phase",
+            delivery: "Dec 04",
+            measurements: { chest: "39.0\"", waist: "32.5\"", length: "29.0\"", sleeve: "24.5\"" }
+        }
+    };
+
+    const current = orders[selectedOrder];
+
+    return (
+        <div className="w-full h-48 sm:h-52 rounded-xl bg-[#120F09] border border-amber-500/20 p-4 flex flex-col justify-between overflow-hidden relative">
+            <div className="flex items-center justify-between text-xs border-b border-amber-500/15 pb-2">
+                <span className="font-mono text-amber-300 flex items-center gap-1.5">
+                    <Scissors className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Dadashri Tailor Suite</span>
+                </span>
+                <span className="text-[10px] font-semibold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">
+                    Order {current.id}
+                </span>
+            </div>
+
+            <div className="py-1">
+                <div className="flex items-center justify-between text-xs mb-1.5">
+                    <span className="font-semibold text-white truncate max-w-[180px]">{current.client}</span>
+                    <span className="text-[10px] text-amber-400 font-medium bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+                        {current.status}
+                    </span>
+                </div>
+                {/* Measurement matrix */}
+                <div className="grid grid-cols-4 gap-1.5 p-2 rounded-lg bg-black/40 border border-amber-500/15 text-center text-[10px]">
+                    <div>
+                        <span className="text-slate-500 block">Chest</span>
+                        <span className="font-mono font-semibold text-slate-200">{current.measurements.chest}</span>
+                    </div>
+                    <div>
+                        <span className="text-slate-500 block">Waist</span>
+                        <span className="font-mono font-semibold text-slate-200">{current.measurements.waist}</span>
+                    </div>
+                    <div>
+                        <span className="text-slate-500 block">Length</span>
+                        <span className="font-mono font-semibold text-slate-200">{current.measurements.length}</span>
+                    </div>
+                    <div>
+                        <span className="text-slate-500 block">Sleeve</span>
+                        <span className="font-mono font-semibold text-slate-200">{current.measurements.sleeve}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-2 border-t border-amber-500/15 text-[11px] text-slate-400">
+                <div className="flex items-center gap-1.5">
+                    <button
+                        type="button"
+                        onClick={() => setSelectedOrder("vikram")}
+                        className={`text-[10px] px-2 py-0.5 rounded cursor-pointer transition-colors ${selectedOrder === "vikram" ? "bg-amber-500/20 text-amber-300 font-medium" : "text-slate-500 hover:text-slate-300"}`}
+                    >
+                        Tuxedo
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => setSelectedOrder("aarav")}
+                        className={`text-[10px] px-2 py-0.5 rounded cursor-pointer transition-colors ${selectedOrder === "aarav" ? "bg-amber-500/20 text-amber-300 font-medium" : "text-slate-500 hover:text-slate-300"}`}
+                    >
+                        Bandhgala
+                    </button>
+                </div>
+                <span className="text-amber-400 font-medium">Delivery: {current.delivery}</span>
+            </div>
+        </div>
+    );
+}
+
+// Interactive UI Mockup for STARSHIFT ALGO (FinTech)
+function AlgoMockup() {
+    const [timeframe, setTimeframe] = useState<"1M" | "5M" | "15M">("1M");
+
+    const tfData = {
+        "1M": {
+            symbol: "NIFTY_FUT 24,480.50",
+            pct: "+0.65%",
+            signal: "LONG (VWAP Cross)",
+            latency: "8ms",
+            path: "M 0 38 L 40 34 L 80 40 L 120 28 L 160 30 L 200 18 L 240 22 L 280 14",
+            endY: 14
+        },
+        "5M": {
+            symbol: "BANKNIFTY 52,190.20",
+            pct: "+1.12%",
+            signal: "ACCUMULATE (Trendline)",
+            latency: "6ms",
+            path: "M 0 42 L 50 36 L 90 28 L 140 32 L 190 22 L 230 18 L 280 10",
+            endY: 10
+        },
+        "15M": {
+            symbol: "SENSEX 80,310.00",
+            pct: "+0.44%",
+            signal: "VWAP SUPPORT HELD",
+            latency: "9ms",
+            path: "M 0 30 L 60 35 L 110 32 L 160 20 L 210 24 L 250 16 L 280 12",
+            endY: 12
+        }
+    };
+
+    const current = tfData[timeframe];
+
+    return (
+        <div className="w-full h-48 sm:h-52 rounded-xl bg-[#090D18] border border-blue-500/20 p-4 flex flex-col justify-between overflow-hidden relative">
+            <div className="flex items-center justify-between text-xs border-b border-blue-500/15 pb-2">
+                <span className="font-mono text-blue-300 flex items-center gap-1.5">
+                    <TrendingUp className="w-3.5 h-3.5 text-blue-400" />
+                    <span>VWAP Execution Node</span>
+                </span>
+                <span className="text-[10px] font-semibold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+                    <span>Strategy Running</span>
+                </span>
+            </div>
+
+            {/* Simulated Live SVG Candlestick & VWAP Chart */}
+            <div className="py-1">
+                <div className="flex items-center justify-between text-xs mb-1">
+                    <span className="font-mono font-semibold text-white">{current.symbol}</span>
+                    <span className="font-mono text-[10px] text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">
+                        {current.pct} (VWAP Support)
+                    </span>
+                </div>
+                <div className="h-14 w-full flex items-center">
+                    <svg className="w-full h-full overflow-visible" viewBox="0 0 280 50">
+                        {/* Grid lines */}
+                        <line x1="0" y1="12" x2="280" y2="12" stroke="rgba(255,255,255,0.05)" strokeDasharray="2 2" />
+                        <line x1="0" y1="35" x2="280" y2="35" stroke="rgba(255,255,255,0.05)" strokeDasharray="2 2" />
+
+                        {/* VWAP Baseline (Blue) */}
+                        <path
+                            d="M 0 32 Q 70 28, 140 24 T 280 18"
+                            fill="none"
+                            stroke="#38bdf8"
+                            strokeWidth="1.5"
+                            strokeDasharray="4 2"
+                        />
+
+                        {/* Price Action Line (Emerald Green) */}
+                        <path
+                            d={current.path}
+                            fill="none"
+                            stroke="#34d399"
+                            strokeWidth="2"
+                        />
+
+                        {/* Signal Dot */}
+                        <circle cx="280" cy={current.endY} r="3" fill="#34d399" />
+                    </svg>
+                </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-2 border-t border-blue-500/15 text-[10px] sm:text-[11px] text-slate-400">
+                <div className="flex items-center gap-1">
+                    {(["1M", "5M", "15M"] as const).map((tf) => (
+                        <button
+                            key={tf}
+                            type="button"
+                            onClick={() => setTimeframe(tf)}
+                            className={`px-1.5 py-0.5 rounded text-[10px] font-mono cursor-pointer transition-colors ${timeframe === tf ? "bg-blue-500/20 text-blue-300 font-semibold" : "text-slate-500 hover:text-slate-300"}`}
+                        >
+                            {tf}
+                        </button>
+                    ))}
+                </div>
+                <span className="font-mono text-slate-400">Latency: <strong className="text-blue-400">{current.latency}</strong></span>
+            </div>
+        </div>
+    );
+}
+
+export function VenturesPortfolio() {
+    const [activeTab, setActiveTab] = useState<string>("all");
+    const [expandedCard, setExpandedCard] = useState<string | null>(null);
+
+    const filteredVentures = activeTab === "all"
+        ? ventures
+        : ventures.filter(v => v.id === activeTab);
+
+    return (
+        <section id="ventures" className="relative pt-16 sm:pt-20 pb-20 sm:pb-28 px-4 sm:px-6 md:px-12 lg:px-24 overflow-hidden border-t border-white/[0.06]">
+            {/* Ambient Background Gradient Lighting */}
+            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-[750px] h-[400px] bg-primary/5 blur-[160px] rounded-full pointer-events-none" />
+
+            <div className="container max-w-6xl mx-auto relative z-10 w-full">
 
                 {/* Section Header */}
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-6 sm:mb-8">
-                    <div className="text-center sm:text-left">
-                        <p className="text-[11px] uppercase tracking-widest text-slate-500 font-semibold mb-1">
-                            Portfolio &amp; Subsidiaries
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-12 sm:mb-16">
+                    <div className="text-center sm:text-left max-w-xl">
+                        <p className="text-[11px] sm:text-xs uppercase tracking-widest text-slate-500 font-semibold mb-2">
+                            Portfolio &amp; Operating Companies
                         </p>
-                        <h2 className="text-2xl sm:text-3xl font-bold font-heading text-white tracking-tight">
-                            Our Businesses &amp; Startups
+                        <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold font-heading text-white tracking-tight leading-tight">
+                            Ventures Under Starshift
                         </h2>
+                        <p className="text-xs sm:text-sm text-slate-400 mt-2 font-normal leading-relaxed">
+                            Independent technology brands, transactional platforms, and digital software suites engineered for market leadership.
+                        </p>
                     </div>
 
-                    {/* View Switcher */}
-                    <div className="flex items-center gap-1 p-1 rounded-2xl bg-white/[0.03] border border-white/[0.08] backdrop-blur-md">
+                    {/* Interactive Filter Pills */}
+                    <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-white/[0.03] border border-white/[0.08] backdrop-blur-md overflow-x-auto sm:overflow-visible max-w-full no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                         <button
                             type="button"
-                            onClick={() => setViewMode("ring")}
-                            className={`flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-medium transition-colors cursor-pointer ${
-                                viewMode === "ring"
-                                    ? "bg-primary text-white"
+                            onClick={() => setActiveTab("all")}
+                            className={`px-3.5 py-1.5 rounded-xl text-xs font-medium transition-colors cursor-pointer whitespace-nowrap ${
+                                activeTab === "all"
+                                    ? "bg-primary text-white shadow-[0_0_15px_rgba(0,191,255,0.35)]"
                                     : "text-slate-400 hover:text-white"
                             }`}
                         >
-                            <Orbit className="w-3.5 h-3.5" />
-                            <span>Barrel 3D</span>
+                            All Ventures (4)
                         </button>
-                        <button
-                            type="button"
-                            onClick={() => setViewMode("grid")}
-                            className={`flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-medium transition-colors cursor-pointer ${
-                                viewMode === "grid"
-                                    ? "bg-primary text-white"
-                                    : "text-slate-400 hover:text-white"
-                            }`}
-                        >
-                            <LayoutGrid className="w-3.5 h-3.5" />
-                            <span>Grid</span>
-                        </button>
+                        {ventures.map((v) => (
+                            <button
+                                key={v.id}
+                                type="button"
+                                onClick={() => setActiveTab(v.id)}
+                                className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-colors cursor-pointer whitespace-nowrap ${
+                                    activeTab === v.id
+                                        ? "bg-primary text-white shadow-[0_0_15px_rgba(0,191,255,0.35)]"
+                                        : "text-slate-400 hover:text-white"
+                                }`}
+                            >
+                                {v.name}
+                            </button>
+                        ))}
                     </div>
                 </div>
 
-                {/* 3D Motion Barrel Carousel View */}
-                {viewMode === "ring" ? (
-                    <div className="relative w-full flex flex-col items-center">
+                {/* Revamped 2x2 Bento Matrix Cards */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+                    <AnimatePresence mode="popLayout">
+                        {filteredVentures.map((venture, index) => {
+                            const isExpanded = expandedCard === venture.id;
 
-                        {/* 3D Barrel Stage */}
-                        <div
-                            className="relative w-full h-[370px] sm:h-[400px] flex items-center justify-center select-none overflow-hidden"
-                            style={{
-                                perspective: "1100px",
-                            }}
-                        >
-                            {/* Motion Drag Handler Container */}
-                            <motion.div
-                                drag="x"
-                                dragConstraints={{ left: 0, right: 0 }}
-                                dragElastic={0}
-                                onDragStart={() => {
-                                    isDraggingRef.current = true;
-                                }}
-                                onDrag={(e, info) => {
-                                    const current = rotation.get();
-                                    rotation.set(current + info.delta.x * 0.4);
-                                }}
-                                onDragEnd={(e, info) => {
-                                    setTimeout(() => {
-                                        isDraggingRef.current = false;
-                                    }, 100);
-
-                                    // Satisfying velocity flick & magnetic snap to nearest 90-deg card
-                                    const current = rotation.get();
-                                    const flickBonus = info.velocity.x * 0.06;
-                                    const targetVal = current + flickBonus;
-
-                                    const snapped = Math.round(targetVal / angleStep) * angleStep;
-                                    rotation.set(snapped);
-
-                                    const idx = ((-Math.round(snapped / angleStep) % count) + count) % count;
-                                    setActiveIndex(idx);
-                                }}
-                                className="relative w-full h-full flex items-center justify-center cursor-grab active:cursor-grabbing touch-pan-y"
-                                style={{
-                                    transformStyle: "preserve-3d",
-                                }}
-                            >
-                                {/* Continuous Rotating Cylinder */}
+                            return (
                                 <motion.div
-                                    className="relative w-full h-full flex items-center justify-center pointer-events-none"
-                                    style={{
-                                        rotateY: smoothRotation,
-                                        transformStyle: "preserve-3d",
-                                    }}
+                                    key={venture.id}
+                                    layout
+                                    initial={{ opacity: 0, y: 15 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: 15 }}
+                                    transition={{ duration: 0.3, delay: index * 0.05 }}
+                                    className="relative rounded-3xl p-6 sm:p-8 backdrop-blur-2xl bg-[#0B0F17]/90 border border-white/[0.08] hover:border-white/[0.2] transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-xl group"
                                 >
-                                    {ventures.map((venture, index) => {
-                                        const itemAngle = index * angleStep;
-                                        const isCurrent = index === activeIndex;
+                                    {/* Subtle Ambient Card Gradient */}
+                                    <div className={`absolute inset-0 bg-gradient-to-br ${venture.gradient} pointer-events-none opacity-50 group-hover:opacity-100 transition-opacity duration-300`} />
 
-                                        return (
-                                            <div
-                                                key={venture.id}
-                                                onClick={(e) => {
-                                                    if (!isDraggingRef.current && !isCurrent) {
-                                                        e.stopPropagation();
-                                                        rotateToIndex(index);
-                                                    }
-                                                }}
-                                                style={{
-                                                    width: `${cardWidth}px`,
-                                                    height: "310px",
-                                                    transform: `rotateY(${itemAngle}deg) translateZ(${radius}px)`,
-                                                    transformStyle: "preserve-3d",
-                                                }}
-                                                className={`absolute pointer-events-auto rounded-2xl p-5 backdrop-blur-2xl transition-all duration-300 flex flex-col justify-between ${
-                                                    isCurrent
-                                                        ? "bg-[#0E1526]/95 border border-cyan-400/40 shadow-[0_15px_40px_rgba(0,191,255,0.2)] opacity-100 scale-100 z-30"
-                                                        : "bg-[#0A0E1A]/70 border border-white/[0.06] opacity-35 hover:opacity-75 scale-90 z-10 cursor-pointer"
-                                                }`}
-                                            >
-                                                <div>
-                                                    {/* Card Header */}
-                                                    <div className="flex items-center justify-between pb-2.5 mb-2.5 border-b border-white/[0.06]">
-                                                        <span className="text-[11px] font-mono text-slate-500">
-                                                            {venture.number}
-                                                        </span>
-                                                        <span className="text-[10px] uppercase tracking-wider font-semibold text-slate-400">
-                                                            {venture.category}
-                                                        </span>
-                                                    </div>
-
-                                                    {/* Title & Tagline */}
-                                                    <div className="mb-2">
-                                                        <h3 className="text-lg sm:text-xl font-bold font-heading text-white tracking-tight leading-tight">
-                                                            {venture.name}
-                                                        </h3>
-                                                        <p className="text-xs text-cyan-400 font-medium mt-0.5">
-                                                            {venture.tagline}
-                                                        </p>
-                                                    </div>
-
-                                                    {/* Description */}
-                                                    <p className="text-xs text-slate-300 leading-relaxed font-normal mb-3 line-clamp-2">
-                                                        {venture.description}
-                                                    </p>
-
-                                                    {/* Highlights */}
-                                                    <div className="space-y-1 mb-2">
-                                                        {venture.features.slice(0, 3).map((feat, idx) => (
-                                                            <div key={idx} className="flex items-start gap-1.5 text-[11px] text-slate-400">
-                                                                <span className="text-cyan-400/80 mt-0.5">•</span>
-                                                                <span className="leading-snug truncate">{feat}</span>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-
-                                                    {/* Note */}
-                                                    {venture.note && (
-                                                        <p className="text-[10px] text-slate-500 mt-1 line-clamp-1">
-                                                            {venture.note}
-                                                        </p>
-                                                    )}
-                                                </div>
-
-                                                {/* Launch Link */}
-                                                <div className="pt-2.5 border-t border-white/[0.06]">
-                                                    <a
-                                                        href={venture.url}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        onClick={(e) => {
-                                                            if (isDraggingRef.current) {
-                                                                e.preventDefault();
-                                                                return;
-                                                            }
-                                                            if (!isCurrent) {
-                                                                e.preventDefault();
-                                                                rotateToIndex(index);
-                                                            }
-                                                        }}
-                                                        className={`w-full inline-flex items-center justify-between px-3.5 py-2 rounded-xl border text-xs font-medium transition-colors ${
-                                                            isCurrent
-                                                                ? "bg-white/[0.05] hover:bg-white/[0.1] border-cyan-400/30 text-white cursor-pointer"
-                                                                : "bg-white/[0.02] border-white/[0.04] text-slate-400 pointer-events-none"
-                                                        }`}
-                                                    >
-                                                        <span className="font-mono text-[11px] text-slate-300 truncate mr-2">
-                                                            {venture.displayUrl}
-                                                        </span>
-                                                        <span className="inline-flex items-center gap-1 text-cyan-400 font-semibold text-xs flex-shrink-0">
-                                                            <span>Launch</span>
-                                                            <ArrowUpRight className="w-3.5 h-3.5" />
-                                                        </span>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                                </motion.div>
-                            </motion.div>
-                        </div>
-
-                        {/* Interactive Controls */}
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 mt-3 sm:mt-5 w-full">
-                            {/* Drag Hint */}
-                            <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium select-none">
-                                <MoveHorizontal className="w-3.5 h-3.5 text-cyan-400/80 animate-pulse" />
-                                <span>Drag horizontally to spin the barrel</span>
-                            </div>
-
-                            {/* Stepper Buttons */}
-                            <div className="flex items-center gap-2">
-                                <button
-                                    type="button"
-                                    onClick={prevVenture}
-                                    aria-label="Previous Venture"
-                                    className="w-8 h-8 rounded-full bg-white/[0.04] hover:bg-white/[0.1] border border-white/[0.08] flex items-center justify-center text-slate-300 hover:text-white transition-colors cursor-pointer"
-                                >
-                                    <ChevronLeft className="w-4 h-4" />
-                                </button>
-
-                                <button
-                                    type="button"
-                                    onClick={nextVenture}
-                                    aria-label="Next Venture"
-                                    className="w-8 h-8 rounded-full bg-white/[0.04] hover:bg-white/[0.1] border border-white/[0.08] flex items-center justify-center text-slate-300 hover:text-white transition-colors cursor-pointer"
-                                >
-                                    <ChevronRight className="w-4 h-4" />
-                                </button>
-                            </div>
-
-                            {/* Venture Pills */}
-                            <div className="flex items-center gap-1.5">
-                                {ventures.map((v, i) => (
-                                    <button
-                                        key={v.id}
-                                        type="button"
-                                        onClick={() => rotateToIndex(i)}
-                                        className={`px-2.5 py-1 rounded-xl text-xs font-medium transition-all duration-200 cursor-pointer ${
-                                            i === activeIndex
-                                                ? "bg-primary text-white shadow-[0_0_12px_rgba(0,191,255,0.4)]"
-                                                : "bg-white/[0.03] text-slate-400 hover:text-white hover:bg-white/[0.06]"
-                                        }`}
-                                    >
-                                        <span>{v.number}</span>
-                                        <span className="hidden sm:inline ml-1 opacity-80">{v.name}</span>
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                    </div>
-                ) : (
-                    /* 2x2 Minimalist Grid View */
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
-                        {ventures.map((venture) => (
-                            <div
-                                key={venture.id}
-                                className="relative rounded-2xl p-5 sm:p-6 backdrop-blur-xl bg-white/[0.02] border border-white/[0.08] hover:border-white/[0.18] transition-colors duration-200 flex flex-col justify-between"
-                            >
-                                <div>
-                                    <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/[0.06]">
-                                        <span className="text-xs font-mono font-medium text-slate-500">
-                                            {venture.number}
-                                        </span>
-                                        <span className="text-[10px] uppercase tracking-wider font-semibold text-slate-400">
-                                            {venture.category}
-                                        </span>
-                                    </div>
-
-                                    <div className="mb-2.5">
-                                        <h3 className="text-xl font-bold font-heading text-white tracking-tight">
-                                            {venture.name}
-                                        </h3>
-                                        <p className="text-xs text-cyan-400 font-medium mt-0.5">
-                                            {venture.tagline}
-                                        </p>
-                                    </div>
-
-                                    <p className="text-xs text-slate-300 leading-relaxed font-normal mb-4">
-                                        {venture.description}
-                                    </p>
-
-                                    <div className="mb-4 space-y-1">
-                                        {venture.features.map((feat, idx) => (
-                                            <div key={idx} className="flex items-start gap-1.5 text-xs text-slate-400">
-                                                <span className="text-cyan-400/70 select-none mt-0.5">•</span>
-                                                <span className="leading-snug">{feat}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-
-                                    {venture.note && (
-                                        <div className="p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.05] text-[10px] text-slate-500 leading-relaxed mb-4">
-                                            {venture.note}
+                                    <div className="relative z-10">
+                                        {/* Card Top Meta Bar */}
+                                        <div className="flex items-center justify-between pb-4 mb-5 border-b border-white/[0.06]">
+                                            <span className="font-mono text-xs text-slate-500 font-semibold">
+                                                {venture.number}
+                                            </span>
+                                            <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 bg-white/[0.04] px-2.5 py-1 rounded-full border border-white/[0.06]">
+                                                {venture.category}
+                                            </span>
                                         </div>
-                                    )}
-                                </div>
 
-                                <div className="pt-3 border-t border-white/[0.06]">
-                                    <a
-                                        href={venture.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="w-full inline-flex items-center justify-between px-3.5 py-2 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.06] hover:border-white/[0.15] text-xs font-medium text-slate-200 hover:text-white transition-colors group cursor-pointer"
-                                    >
-                                        <span className="font-mono text-xs text-slate-400 group-hover:text-slate-200 transition-colors">
-                                            {venture.displayUrl}
-                                        </span>
-                                        <span className="inline-flex items-center gap-1 text-cyan-400 text-xs font-semibold">
-                                            <span>Launch</span>
-                                            <ArrowUpRight className="w-3.5 h-3.5 text-cyan-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                                        </span>
-                                    </a>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
+                                        {/* Visual Product UI Mockup */}
+                                        <div className="mb-6">
+                                            {venture.id === "tinvo" && <TinvoMockup />}
+                                            {venture.id === "swas" && <SwasMockup />}
+                                            {venture.id === "dadashri" && <DadashriMockup />}
+                                            {venture.id === "starshift-algo" && <AlgoMockup />}
+                                        </div>
+
+                                        {/* Venture Title & Tagline */}
+                                        <div className="mb-3">
+                                            <h3 className="text-2xl sm:text-3xl font-bold font-heading text-white tracking-tight">
+                                                {venture.name}
+                                            </h3>
+                                            <p className={`text-xs sm:text-sm font-medium mt-1 ${venture.accentColor}`}>
+                                                {venture.tagline}
+                                            </p>
+                                        </div>
+
+                                        {/* Description */}
+                                        <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal mb-5">
+                                            {venture.description}
+                                        </p>
+
+                                        {/* Key Capabilities */}
+                                        <div className="mb-5 space-y-2">
+                                            <div className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                                                <span>Core Platform Capabilities</span>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setExpandedCard(isExpanded ? null : venture.id)}
+                                                    className="text-cyan-400 hover:text-cyan-300 transition-colors text-[10px] cursor-pointer"
+                                                >
+                                                    {isExpanded ? "Collapse" : "View All"}
+                                                </button>
+                                            </div>
+
+                                            <div className="grid grid-cols-1 gap-1.5">
+                                                {(isExpanded ? venture.features : venture.features.slice(0, 3)).map((feat, idx) => (
+                                                    <div key={idx} className="flex items-start gap-2 text-xs text-slate-300">
+                                                        <span className="text-cyan-400/80 mt-0.5">•</span>
+                                                        <span className="leading-snug">{feat}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Financial Risk Disclosure (for Algo) */}
+                                        {venture.note && (
+                                            <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.05] text-[10px] sm:text-[11px] text-slate-400 leading-relaxed mb-5">
+                                                <span className="font-semibold text-slate-300 block mb-0.5">Risk Disclosure:</span>
+                                                {venture.note}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Bottom Launch Bar */}
+                                    <div className="relative z-10 pt-4 border-t border-white/[0.06] flex items-center justify-between gap-4">
+                                        <div className="font-mono text-xs text-slate-400 truncate">
+                                            Live: <span className="text-slate-200 font-medium">{venture.displayUrl}</span>
+                                        </div>
+
+                                        <a
+                                            href={venture.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/[0.05] hover:bg-primary text-white border border-white/[0.1] hover:border-cyan-400/40 text-xs font-semibold transition-all duration-200 group/btn cursor-pointer flex-shrink-0"
+                                        >
+                                            <span>Launch Platform</span>
+                                            <ArrowUpRight className="w-3.5 h-3.5 text-cyan-400 group-hover/btn:text-white transition-colors" />
+                                        </a>
+                                    </div>
+                                </motion.div>
+                            );
+                        })}
+                    </AnimatePresence>
+                </div>
 
             </div>
         </section>
