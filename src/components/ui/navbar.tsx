@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { motion, useScroll, AnimatePresence } from "framer-motion";
 import { SmoothScrollLink } from "@/components/ui/smooth-scroll-link";
 import { Menu, X, ArrowUpRight } from "lucide-react";
@@ -70,15 +69,13 @@ export function Navbar() {
 
                     {/* Right: Contact CTA & Mobile Toggle */}
                     <div className="flex items-center gap-2 sm:gap-3">
-                        <Button
-                            asChild
-                            className="bg-primary hover:bg-primary/90 text-white rounded-full px-3.5 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold transition-colors"
+                        <SmoothScrollLink
+                            href="#contact"
+                            className="bg-primary hover:bg-primary/90 text-white rounded-full px-3.5 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold transition-colors flex items-center gap-1 sm:gap-1.5"
                         >
-                            <SmoothScrollLink href="#contact" className="flex items-center gap-1 sm:gap-1.5">
                                 <span>Get in Touch</span>
                                 <ArrowUpRight className="w-3.5 h-3.5 text-cyan-200 hidden xs:inline-block" />
                             </SmoothScrollLink>
-                        </Button>
 
                         {/* Mobile Hamburger Button */}
                         <button
@@ -121,15 +118,14 @@ export function Navbar() {
                             </div>
 
                             <div className="pt-3 mt-2 border-t border-white/[0.08]">
-                                <Button
-                                    asChild
-                                    className="w-full bg-primary hover:bg-primary/90 text-white rounded-xl py-2.5 font-semibold text-sm shadow-[0_0_20px_rgba(0,191,255,0.4)] border border-cyan-400/30"
+                                <SmoothScrollLink
+                                    href="#contact"
+                                    onClick={closeMobileMenu}
+                                    className="w-full bg-primary hover:bg-primary/90 text-white rounded-xl py-2.5 font-semibold text-sm shadow-[0_0_20px_rgba(0,191,255,0.4)] border border-cyan-400/30 flex items-center justify-center gap-2"
                                 >
-                                    <SmoothScrollLink href="#contact" onClick={closeMobileMenu} className="flex items-center justify-center gap-2">
-                                        <span>Get in Touch</span>
-                                        <ArrowUpRight className="w-4 h-4 text-cyan-200" />
-                                    </SmoothScrollLink>
-                                </Button>
+                                    <span>Get in Touch</span>
+                                    <ArrowUpRight className="w-4 h-4 text-cyan-200" />
+                                </SmoothScrollLink>
                             </div>
                         </motion.div>
                     )}
