@@ -105,7 +105,7 @@ export function ParticleBackground() {
     return (
         <canvas
             ref={canvasRef}
-            className="fixed inset-0 -z-10 bg-background"
+            className="fixed inset-0 -z-10 bg-background pointer-events-none"
         />
     );
 }

@@ -15,8 +15,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Starshift",
-  description: "The future of AI-powered productivity.",
+  title: "Starshift | Parent Enterprise & Venture Group",
+  description: "Starshift is the parent company and operational venture studio powering an expanding ecosystem of autonomous technology, software infrastructure, and modern commerce startups.",
   icons: {
     icon: "/favicon.png",
   },

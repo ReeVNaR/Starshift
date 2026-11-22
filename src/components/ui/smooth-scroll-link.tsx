@@ -14,13 +14,19 @@ export function SmoothScrollLink({ href, children, onClick, ...props }: SmoothSc
             const id = href.substring(1);
             const element = document.getElementById(id);
             if (element) {
-                const navbarHeight = 80;
-                const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-                const offsetPosition = elementPosition - navbarHeight;
+                // Fixed top offset for floating navbar (height ~60px + 20px padding)
+                const navbarOffset = 84;
+                const elementPosition = element.getBoundingClientRect().top;
+                const targetPosition = elementPosition + window.pageYOffset - navbarOffset;
+
                 window.scrollTo({
-                    top: offsetPosition,
+                    top: Math.max(0, targetPosition),
                     behavior: "smooth"
                 });
+
+                if (window.history.pushState) {
+                    window.history.pushState(null, '', href);
+                }
             }
         }
         if (onClick) {

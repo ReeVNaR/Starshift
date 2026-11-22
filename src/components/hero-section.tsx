@@ -1,158 +1,70 @@
 "use client";
 
-
 import { motion } from "framer-motion";
-import { GlowingButton } from "@/components/ui/glowing-button";
-import { Mic, Settings, Globe, Zap, MessageSquare, BarChart } from "lucide-react";
-import Link from "next/link";
-
 import { SmoothScrollLink } from "@/components/ui/smooth-scroll-link";
 
 export function HeroSection() {
     return (
-        <section className="relative min-h-[90vh] flex items-center pt-24 pb-12 px-6 md:px-12 lg:px-24 overflow-hidden">
-            <div className="container mx-auto grid lg:grid-cols-2 gap-12 items-center">
+        <section className="relative min-h-[65vh] sm:min-h-[75vh] flex flex-col justify-center items-center pt-28 sm:pt-36 md:pt-40 pb-14 sm:pb-20 px-4 sm:px-6 md:px-12 lg:px-24 overflow-hidden">
+            {/* Ambient Lighting */}
+            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-[600px] h-[300px] bg-primary/10 blur-[150px] rounded-full pointer-events-none" />
 
-                {/* Left Content */}
-                <div className="space-y-8 z-10">
-                    <h1 className="text-4xl md:text-6xl font-bold font-heading leading-[1.2] text-white">
-                        Turn Your Website Into a <br />
-                        <span className="text-primary drop-shadow-[0_0_20px_rgba(0,191,255,0.4)]">24/7 AI Sales & Support Assistant</span>
-                    </h1>
+            <div className="container max-w-4xl mx-auto flex flex-col items-center text-center relative z-10 w-full">
 
-                    <p className="text-lg text-muted-foreground max-w-xl leading-relaxed">
-                        We build conversion-focused websites powered by AI voice agents and automations, so your business can greet, answer, and book customers on autopilot 24/7.
-                    </p>
+                {/* Eyebrow */}
+                <motion.p
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-[11px] sm:text-xs md:text-[13px] uppercase tracking-widest text-slate-400 font-semibold mb-5 sm:mb-7"
+                >
+                    Starshift Enterprise Group
+                </motion.p>
 
-                    <div className="space-y-3">
-                        <div className="flex items-center gap-3 text-muted-foreground">
-                            <Mic className="w-5 h-5 text-primary" />
-                            <span className="font-medium">AI Voice Agent on Your Website</span>
-                        </div>
-                        <div className="flex items-center gap-3 text-muted-foreground">
-                            <Settings className="w-5 h-5 text-primary" />
-                            <span className="font-medium">Workflow Automations with Starshift</span>
-                        </div>
-                        <div className="flex items-center gap-3 text-muted-foreground">
-                            <Globe className="w-5 h-5 text-primary" />
-                            <span className="font-medium">Built for Modern Service Businesses</span>
-                        </div>
-                    </div>
+                {/* Hero Headline */}
+                <motion.h1
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.1 }}
+                    className="text-2xl xs:text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-heading text-white tracking-tight leading-[1.15] max-w-3xl"
+                >
+                    The Parent Company Behind{" "}
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-blue-500">
+                        Next-Gen Startups &amp; Businesses
+                    </span>
+                </motion.h1>
 
-                    <div className="flex flex-wrap items-center gap-4 pt-4">
-                        <SmoothScrollLink href="#contact">
-                            <GlowingButton className="px-8 py-6 text-base font-semibold">
-                                Book a Free 15 Min Demo
-                            </GlowingButton>
-                        </SmoothScrollLink>
-                        <SmoothScrollLink href="#pricing" className="px-8 py-3.5 text-base font-semibold text-primary border-2 border-primary rounded-full hover:bg-primary/10 hover:scale-105 transition-all">
-                            See Pricing
-                        </SmoothScrollLink>
-                    </div>
-                </div>
+                {/* Subtitle */}
+                <motion.p
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                    className="mt-5 sm:mt-6 text-sm sm:text-base md:text-lg text-slate-400 max-w-2xl leading-relaxed font-normal px-2"
+                >
+                    Starshift builds, operates, and backs an expanding ecosystem of independent technology companies, digital platforms, and modern enterprise solutions.
+                </motion.p>
 
-                {/* Right Content (Waveform Visual) */}
-                {/* Right Content (Cozy System Visual) */}
-                <div className="relative h-[500px] w-full flex items-center justify-center">
-                    {/* Background Glow */}
-                    <div className="absolute inset-0 bg-primary/10 blur-[100px] rounded-full" />
-
-                    {/* Connecting Lines (SVG) */}
-                    <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-20">
-                        <line x1="50%" y1="50%" x2="20%" y2="20%" stroke="currentColor" strokeWidth="2" className="text-primary" />
-                        <line x1="50%" y1="50%" x2="80%" y2="20%" stroke="currentColor" strokeWidth="2" className="text-primary" />
-                        <line x1="50%" y1="50%" x2="20%" y2="80%" stroke="currentColor" strokeWidth="2" className="text-primary" />
-                        <line x1="50%" y1="50%" x2="80%" y2="80%" stroke="currentColor" strokeWidth="2" className="text-primary" />
-                    </svg>
-
-                    {/* Center Core */}
-                    <motion.div
-                        className="relative z-20 w-32 h-32 bg-primary/10 rounded-full flex items-center justify-center backdrop-blur-md border border-primary/20 shadow-[0_0_50px_rgba(0,191,255,0.2)] cursor-pointer hover:bg-primary/20 transition-colors"
-                        animate={{ scale: [1, 1.05, 1] }}
-                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                        onClick={() => {
-                            const widget = document.querySelector("elevenlabs-convai");
-                            const button = widget?.shadowRoot?.querySelector("button");
-                            if (button) {
-                                (button as HTMLElement).click();
-                            }
-                        }}
+                {/* Actions */}
+                <motion.div
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.3 }}
+                    className="mt-7 sm:mt-9 flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto px-4 sm:px-0"
+                >
+                    <SmoothScrollLink
+                        href="#ventures"
+                        className="w-full sm:w-auto px-7 py-3 text-sm sm:text-base font-semibold text-white bg-primary hover:bg-primary/90 rounded-full transition-all duration-200 text-center shadow-[0_0_20px_rgba(0,191,255,0.25)] hover:shadow-[0_0_30px_rgba(0,191,255,0.45)] hover:scale-[1.02]"
                     >
-                        <div className="absolute inset-0 rounded-full border border-primary/30 animate-ping opacity-20" />
-                        <Mic className="w-12 h-12 text-primary" />
-                    </motion.div>
+                        Explore Our Ventures
+                    </SmoothScrollLink>
 
-                    {/* Floating Items - Distributed to fill space */}
-
-                    {/* Top Left - Analytics */}
-                    <motion.div
-                        className="absolute top-[10%] left-[5%] md:left-[10%] p-4 rounded-2xl bg-background/40 border border-white/10 backdrop-blur-xl shadow-lg flex items-center gap-3 max-w-[200px]"
-                        animate={{ y: [-10, 10, -10] }}
-                        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0 }}
+                    <SmoothScrollLink
+                        href="#about"
+                        className="w-full sm:w-auto px-7 py-3 text-sm sm:text-base font-medium text-slate-300 hover:text-white rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-cyan-400/40 backdrop-blur-xl transition-all duration-200 text-center"
                     >
-                        <div className="p-2 rounded-lg bg-purple-500/20 text-purple-400">
-                            <BarChart className="w-5 h-5" />
-                        </div>
-                        <div>
-                            <p className="text-xs text-muted-foreground">Performance</p>
-                            <p className="text-sm font-bold text-white">99.9% Accuracy</p>
-                        </div>
-                    </motion.div>
-
-                    {/* Top Right - Availability */}
-                    <motion.div
-                        className="absolute top-[15%] right-[5%] md:right-[10%] p-4 rounded-2xl bg-background/40 border border-white/10 backdrop-blur-xl shadow-lg flex items-center gap-3 max-w-[200px]"
-                        animate={{ y: [10, -10, 10] }}
-                        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                    >
-                        <div className="p-2 rounded-lg bg-green-500/20 text-green-400">
-                            <Globe className="w-5 h-5" />
-                        </div>
-                        <div>
-                            <p className="text-xs text-muted-foreground">Status</p>
-                            <p className="text-sm font-bold text-white">Online 24/7</p>
-                        </div>
-                    </motion.div>
-
-                    {/* Bottom Left - Automations */}
-                    <motion.div
-                        className="absolute bottom-[15%] left-[5%] md:left-[10%] p-4 rounded-2xl bg-background/40 border border-white/10 backdrop-blur-xl shadow-lg flex items-center gap-3 max-w-[200px]"
-                        animate={{ y: [10, -10, 10] }}
-                        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-                    >
-                        <div className="p-2 rounded-lg bg-orange-500/20 text-orange-400">
-                            <Settings className="w-5 h-5" />
-                        </div>
-                        <div>
-                            <p className="text-xs text-muted-foreground">Workflows</p>
-                            <p className="text-sm font-bold text-white">Automated</p>
-                        </div>
-                    </motion.div>
-
-                    {/* Bottom Right - Instant Reply */}
-                    <motion.div
-                        className="absolute bottom-[10%] right-[5%] md:right-[10%] p-4 rounded-2xl bg-background/40 border border-white/10 backdrop-blur-xl shadow-lg flex items-center gap-3 max-w-[200px]"
-                        animate={{ y: [-10, 10, -10] }}
-                        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 3 }}
-                    >
-                        <div className="p-2 rounded-lg bg-blue-500/20 text-blue-400">
-                            <MessageSquare className="w-5 h-5" />
-                        </div>
-                        <div>
-                            <p className="text-xs text-muted-foreground">Response</p>
-                            <p className="text-sm font-bold text-white">Instant</p>
-                        </div>
-                    </motion.div>
-
-                    {/* Extra Floating Element - Center Top */}
-                    <motion.div
-                        className="absolute top-[5%] left-1/2 -translate-x-1/2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-md text-primary text-xs font-medium"
-                        animate={{ y: [-5, 5, -5] }}
-                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-                    >
-                        AI Active
-                    </motion.div>
-                </div>
+                        About Starshift
+                    </SmoothScrollLink>
+                </motion.div>
 
             </div>
         </section>
