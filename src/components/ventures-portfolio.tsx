@@ -1,13 +1,25 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import {
     ArrowUpRight,
     ShoppingBag,
     MessageSquare,
     Scissors,
     TrendingUp,
+    Globe,
+    Sparkles,
+    Lock,
+    RotateCw,
+    Maximize2,
+    X,
+    Monitor,
+    Tablet,
+    Smartphone,
+    Loader2,
+    ExternalLink,
+    AlertCircle,
 } from "lucide-react";
 
 /* ─── Venture Data ─── */
@@ -25,6 +37,7 @@ export interface Venture {
     accentColor: string;
     gradient: string;
     note?: string;
+    sameOriginRestriction?: boolean;
 }
 
 export const ventures: Venture[] = [
@@ -46,6 +59,7 @@ export const ventures: Venture[] = [
         displayUrl: "tinvo.starshift.in",
         accentColor: "text-sky-600",
         gradient: "from-sky-500/10 via-cyan-500/5 to-transparent",
+        sameOriginRestriction: true,
     },
     {
         id: "swas",
@@ -119,7 +133,7 @@ function TinvoMockup() {
     }[color];
 
     return (
-        <div className="w-full h-44 rounded-xl bg-[#090D16] border border-slate-800/80 p-4 flex flex-col justify-between overflow-hidden shadow-inner">
+        <div className="w-full h-48 rounded-xl bg-[#090D16] border border-slate-800/80 p-4 flex flex-col justify-between overflow-hidden shadow-inner">
             <div className="flex items-center justify-between text-xs border-b border-white/[0.08] pb-2">
                 <span className="font-mono text-slate-400 flex items-center gap-1.5">
                     <ShoppingBag className="w-3 h-3 text-sky-400" />
@@ -165,7 +179,7 @@ function TinvoMockup() {
 
 function SwasMockup() {
     return (
-        <div className="w-full h-44 rounded-xl bg-[#061410] border border-emerald-500/20 p-4 flex flex-col justify-between overflow-hidden shadow-inner">
+        <div className="w-full h-48 rounded-xl bg-[#061410] border border-emerald-500/20 p-4 flex flex-col justify-between overflow-hidden shadow-inner">
             <div className="flex items-center justify-between text-xs border-b border-emerald-500/15 pb-2">
                 <span className="font-mono text-emerald-400 flex items-center gap-1.5 font-medium">
                     <MessageSquare className="w-3 h-3 text-emerald-400" />
@@ -195,7 +209,7 @@ function SwasMockup() {
 
 function DadashriMockup() {
     return (
-        <div className="w-full h-44 rounded-xl bg-[#140F08] border border-amber-500/20 p-4 flex flex-col justify-between overflow-hidden shadow-inner">
+        <div className="w-full h-48 rounded-xl bg-[#140F08] border border-amber-500/20 p-4 flex flex-col justify-between overflow-hidden shadow-inner">
             <div className="flex items-center justify-between text-xs border-b border-amber-500/15 pb-2">
                 <span className="font-mono text-amber-400 flex items-center gap-1.5 font-medium">
                     <Scissors className="w-3 h-3 text-amber-400" />
@@ -234,7 +248,7 @@ function DadashriMockup() {
 
 function AlgoMockup() {
     return (
-        <div className="w-full h-44 rounded-xl bg-[#080E1A] border border-blue-500/20 p-4 flex flex-col justify-between overflow-hidden shadow-inner">
+        <div className="w-full h-48 rounded-xl bg-[#080E1A] border border-blue-500/20 p-4 flex flex-col justify-between overflow-hidden shadow-inner">
             <div className="flex items-center justify-between text-xs border-b border-blue-500/15 pb-2">
                 <span className="font-mono text-blue-400 flex items-center gap-1.5 font-medium">
                     <TrendingUp className="w-3 h-3 text-blue-400" />
@@ -248,7 +262,7 @@ function AlgoMockup() {
                     <span className="font-mono font-semibold text-white text-[11px]">NIFTY_FUT 24,480.50</span>
                     <span className="font-mono text-[9px] text-emerald-400 font-semibold">+0.65%</span>
                 </div>
-                <div className="h-12 w-full">
+                <div className="h-14 w-full">
                     <svg className="w-full h-full overflow-visible" viewBox="0 0 280 46">
                         <line x1="0" y1="12" x2="280" y2="12" stroke="rgba(255,255,255,0.06)" strokeDasharray="2 2" />
                         <line x1="0" y1="34" x2="280" y2="34" stroke="rgba(255,255,255,0.06)" strokeDasharray="2 2" />
@@ -274,11 +288,273 @@ const mockupMap: Record<string, React.ComponentType> = {
     "starshift-algo": AlgoMockup,
 };
 
+/* ─── Live Iframe Card (Card View) ─── */
+
+function LiveIframeCard({
+    venture,
+    onExpand,
+}: {
+    venture: Venture;
+    onExpand: () => void;
+}) {
+    const [isLoading, setIsLoading] = useState(true);
+    const [reloadKey, setReloadKey] = useState(0);
+
+    const handleReload = () => {
+        setIsLoading(true);
+        setReloadKey((k) => k + 1);
+    };
+
+    return (
+        <div className="w-full h-48 rounded-xl bg-slate-950 border border-slate-700/80 overflow-hidden shadow-md flex flex-col">
+            {/* Browser top chrome */}
+            <div className="flex items-center justify-between px-3 py-1.5 bg-slate-900 border-b border-slate-800 text-xs">
+                {/* Window control dots */}
+                <div className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-rose-500/80 inline-block" />
+                    <span className="w-2 h-2 rounded-full bg-amber-500/80 inline-block" />
+                    <span className="w-2 h-2 rounded-full bg-emerald-500/80 inline-block" />
+                </div>
+
+                {/* URL Bar */}
+                <div className="flex items-center gap-1 px-2 py-0.5 rounded bg-slate-950 border border-slate-800 text-[10px] text-slate-300 max-w-[170px] sm:max-w-[210px] truncate">
+                    <Lock className="w-2.5 h-2.5 text-emerald-400 shrink-0" />
+                    <span className="truncate font-mono">{venture.displayUrl}</span>
+                </div>
+
+                {/* Chrome actions */}
+                <div className="flex items-center gap-1 text-slate-400">
+                    <button
+                        type="button"
+                        onClick={handleReload}
+                        title="Reload preview"
+                        className="p-1 hover:text-white rounded hover:bg-slate-800 transition cursor-pointer"
+                    >
+                        <RotateCw className={`w-2.5 h-2.5 ${isLoading ? "animate-spin text-cyan-400" : ""}`} />
+                    </button>
+                    <button
+                        type="button"
+                        onClick={onExpand}
+                        title="Expand to Fullscreen Sandbox"
+                        className="p-1 hover:text-white rounded hover:bg-slate-800 transition cursor-pointer"
+                    >
+                        <Maximize2 className="w-2.5 h-2.5" />
+                    </button>
+                    <a
+                        href={venture.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Open in new tab"
+                        className="p-1 hover:text-white rounded hover:bg-slate-800 transition cursor-pointer"
+                    >
+                        <ExternalLink className="w-2.5 h-2.5" />
+                    </a>
+                </div>
+            </div>
+
+            {/* Iframe Viewport */}
+            <div className="relative w-full flex-1 bg-white flex flex-col items-center justify-center overflow-hidden">
+                {isLoading && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-900/95 z-10 text-slate-400 gap-1.5">
+                        <Loader2 className="w-4 h-4 animate-spin text-cyan-400" />
+                        <span className="text-[10px] font-mono">Connecting {venture.displayUrl}...</span>
+                    </div>
+                )}
+
+                {venture.sameOriginRestriction && (
+                    <div className="absolute bottom-1.5 left-1.5 right-1.5 z-20 px-2 py-1 rounded bg-amber-950/90 border border-amber-500/40 text-amber-200 text-[9px] flex items-center justify-between gap-1 shadow-md backdrop-blur-xs">
+                        <span className="truncate flex items-center gap-1">
+                            <AlertCircle className="w-3 h-3 text-amber-400 shrink-0" />
+                            TINVO specifies SAMEORIGIN header.
+                        </span>
+                        <a
+                            href={venture.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-semibold text-amber-300 underline shrink-0 hover:text-white"
+                        >
+                            Open Direct ↗
+                        </a>
+                    </div>
+                )}
+
+                <iframe
+                    key={reloadKey}
+                    src={venture.url}
+                    title={`${venture.name} Live View`}
+                    loading="lazy"
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+                    className="w-full h-full border-0 bg-white"
+                    onLoad={() => setIsLoading(false)}
+                />
+            </div>
+        </div>
+    );
+}
+
+/* ─── Live Sandbox Modal (Full Interactive Preview) ─── */
+
+function LiveSandboxModal({
+    venture,
+    onClose,
+}: {
+    venture: Venture;
+    onClose: () => void;
+}) {
+    const [deviceMode, setDeviceMode] = useState<"desktop" | "tablet" | "mobile">("desktop");
+    const [isLoading, setIsLoading] = useState(true);
+    const [reloadKey, setReloadKey] = useState(0);
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") onClose();
+        };
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [onClose]);
+
+    const deviceWidthClass = {
+        desktop: "w-full",
+        tablet: "w-[768px] max-w-full shadow-2xl",
+        mobile: "w-[390px] max-w-full shadow-2xl",
+    }[deviceMode];
+
+    return (
+        <div className="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-md flex items-center justify-center p-2 sm:p-6 animate-in fade-in duration-200">
+            {/* Modal Box */}
+            <div className="relative w-full max-w-6xl h-[90vh] bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+                {/* Modal Header */}
+                <div className="flex items-center justify-between px-4 py-3 bg-slate-900/90 border-b border-slate-800 text-xs">
+                    {/* Left: Venture identity */}
+                    <div className="flex items-center gap-2">
+                        <span className="font-mono font-bold text-white text-sm tracking-wide">
+                            {venture.name}
+                        </span>
+                        <span className="hidden sm:inline-block text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+                            {venture.category}
+                        </span>
+                    </div>
+
+                    {/* Center: Device Mode Toggles */}
+                    <div className="flex items-center p-0.5 rounded-lg bg-slate-800 border border-slate-700/80 text-slate-400">
+                        <button
+                            type="button"
+                            onClick={() => setDeviceMode("desktop")}
+                            className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium transition cursor-pointer ${
+                                deviceMode === "desktop" ? "bg-cyan-500 text-white shadow-xs" : "hover:text-white"
+                            }`}
+                        >
+                            <Monitor className="w-3.5 h-3.5" />
+                            <span className="hidden md:inline">Desktop</span>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setDeviceMode("tablet")}
+                            className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium transition cursor-pointer ${
+                                deviceMode === "tablet" ? "bg-cyan-500 text-white shadow-xs" : "hover:text-white"
+                            }`}
+                        >
+                            <Tablet className="w-3.5 h-3.5" />
+                            <span className="hidden md:inline">Tablet</span>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setDeviceMode("mobile")}
+                            className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium transition cursor-pointer ${
+                                deviceMode === "mobile" ? "bg-cyan-500 text-white shadow-xs" : "hover:text-white"
+                            }`}
+                        >
+                            <Smartphone className="w-3.5 h-3.5" />
+                            <span className="hidden md:inline">Mobile</span>
+                        </button>
+                    </div>
+
+                    {/* Right: Actions & Close */}
+                    <div className="flex items-center gap-2">
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setIsLoading(true);
+                                setReloadKey((k) => k + 1);
+                            }}
+                            title="Reload frame"
+                            className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition cursor-pointer"
+                        >
+                            <RotateCw className={`w-3.5 h-3.5 ${isLoading ? "animate-spin text-cyan-400" : ""}`} />
+                        </button>
+                        <a
+                            href={venture.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition"
+                        >
+                            <span>Open New Window</span>
+                            <ExternalLink className="w-3 h-3" />
+                        </a>
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="p-1.5 rounded-lg bg-slate-800 hover:bg-rose-500/20 text-slate-300 hover:text-rose-400 transition cursor-pointer"
+                        >
+                            <X className="w-4 h-4" />
+                        </button>
+                    </div>
+                </div>
+
+                {/* Sub-bar: URL & Warning if any */}
+                <div className="flex items-center justify-between px-4 py-1.5 bg-slate-950 border-b border-slate-800 text-[11px] text-slate-400">
+                    <div className="flex items-center gap-2 truncate">
+                        <Lock className="w-3 h-3 text-emerald-400 shrink-0" />
+                        <span className="font-mono text-slate-300 truncate">{venture.url}</span>
+                    </div>
+
+                    {venture.sameOriginRestriction && (
+                        <div className="text-amber-300 text-[10px] flex items-center gap-1 font-medium bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+                            <AlertCircle className="w-3 h-3 text-amber-400" />
+                            <span>TINVO enforces SAMEORIGIN. If blocked, open via button above.</span>
+                        </div>
+                    )}
+                </div>
+
+                {/* Center Viewport Stage */}
+                <div className="flex-1 bg-slate-950/80 flex items-center justify-center p-2 sm:p-4 overflow-hidden relative">
+                    {isLoading && (
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/90 z-20 text-slate-400 gap-2">
+                            <Loader2 className="w-6 h-6 animate-spin text-cyan-400" />
+                            <span className="text-xs font-mono">Loading {venture.name} Sandbox...</span>
+                        </div>
+                    )}
+
+                    <div className={`h-full transition-all duration-300 rounded-xl overflow-hidden border border-slate-700/80 bg-white ${deviceWidthClass}`}>
+                        <iframe
+                            key={reloadKey}
+                            src={venture.url}
+                            title={`${venture.name} Full Interactive Sandbox`}
+                            sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+                            className="w-full h-full border-0 bg-white"
+                            onLoad={() => setIsLoading(false)}
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 /* ─── Venture Card (White Theme) ─── */
 
-function VentureCard({ venture, index }: { venture: Venture; index: number }) {
+function VentureCard({
+    venture,
+    index,
+    onExpand,
+}: {
+    venture: Venture;
+    index: number;
+    onExpand: (v: Venture) => void;
+}) {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: "-60px" });
+    const [mode, setMode] = useState<"mockup" | "iframe">("mockup");
     const Mockup = mockupMap[venture.id];
 
     return (
@@ -293,20 +569,54 @@ function VentureCard({ venture, index }: { venture: Venture; index: number }) {
             <div className={`absolute inset-0 bg-gradient-to-br ${venture.gradient} pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
 
             <div className="relative z-10 flex flex-col h-full">
-                {/* Meta bar */}
+                {/* Meta bar & Mode Switcher */}
                 <div className="flex items-center justify-between mb-4">
-                    <span className="font-mono text-[11px] text-slate-400 font-semibold">{venture.number}</span>
-                    <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200/80">
-                        {venture.category}
-                    </span>
+                    <div className="flex items-center gap-2">
+                        <span className="font-mono text-[11px] text-slate-400 font-semibold">{venture.number}</span>
+                        <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200/80">
+                            {venture.category}
+                        </span>
+                    </div>
+
+                    {/* View Switcher: Overview vs Live Iframe */}
+                    <div className="inline-flex items-center p-0.5 rounded-lg bg-slate-100 border border-slate-200/80 text-[11px] font-medium text-slate-600">
+                        <button
+                            type="button"
+                            onClick={() => setMode("mockup")}
+                            className={`flex items-center gap-1 px-2 py-0.5 rounded-md transition-all cursor-pointer ${
+                                mode === "mockup"
+                                    ? "bg-white text-slate-900 shadow-xs font-semibold"
+                                    : "hover:text-slate-900 text-slate-500"
+                            }`}
+                            title="Interactive product overview"
+                        >
+                            <Sparkles className="w-2.5 h-2.5 text-cyan-600" />
+                            <span>Preview</span>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setMode("iframe")}
+                            className={`flex items-center gap-1 px-2 py-0.5 rounded-md transition-all cursor-pointer ${
+                                mode === "iframe"
+                                    ? "bg-white text-slate-900 shadow-xs font-semibold"
+                                    : "hover:text-slate-900 text-slate-500"
+                            }`}
+                            title="Live app iframe sandbox"
+                        >
+                            <Globe className="w-2.5 h-2.5 text-sky-600" />
+                            <span>Live Iframe</span>
+                        </button>
+                    </div>
                 </div>
 
-                {/* Mockup Container */}
-                {Mockup && (
-                    <div className="mb-5">
+                {/* Preview Container (Mockup or Live Iframe) */}
+                <div className="mb-5">
+                    {mode === "mockup" && Mockup ? (
                         <Mockup />
-                    </div>
-                )}
+                    ) : (
+                        <LiveIframeCard venture={venture} onExpand={() => onExpand(venture)} />
+                    )}
+                </div>
 
                 {/* Title & tagline */}
                 <h3 className="text-xl sm:text-2xl font-bold font-heading text-slate-900 tracking-tight mb-1">
@@ -346,15 +656,26 @@ function VentureCard({ venture, index }: { venture: Venture; index: number }) {
                     <span className="font-mono text-[11px] text-slate-500 font-medium truncate">
                         {venture.displayUrl}
                     </span>
-                    <a
-                        href={venture.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-lg bg-slate-100 hover:bg-sky-600 hover:text-white text-slate-800 border border-slate-200 hover:border-sky-600 text-xs font-semibold transition-all duration-200 cursor-pointer flex-shrink-0 shadow-sm"
-                    >
-                        <span>Visit</span>
-                        <ArrowUpRight className="w-3 h-3" />
-                    </a>
+                    <div className="flex items-center gap-2">
+                        <button
+                            type="button"
+                            onClick={() => onExpand(venture)}
+                            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-all cursor-pointer"
+                            title="Open full interactive device sandbox"
+                        >
+                            <Maximize2 className="w-3 h-3" />
+                            <span className="hidden sm:inline">Sandbox</span>
+                        </button>
+                        <a
+                            href={venture.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-lg bg-slate-900 hover:bg-sky-600 text-white text-xs font-semibold transition-all duration-200 cursor-pointer flex-shrink-0 shadow-sm"
+                        >
+                            <span>Visit</span>
+                            <ArrowUpRight className="w-3 h-3" />
+                        </a>
+                    </div>
                 </div>
             </div>
         </motion.div>
@@ -366,6 +687,7 @@ function VentureCard({ venture, index }: { venture: Venture; index: number }) {
 export function VenturesPortfolio() {
     const headerRef = useRef(null);
     const isHeaderInView = useInView(headerRef, { once: true, margin: "-80px" });
+    const [activeModalVenture, setActiveModalVenture] = useState<Venture | null>(null);
 
     return (
         <section id="ventures" className="relative py-20 sm:py-28 px-4 sm:px-6 md:px-12 lg:px-24 border-t border-slate-200/80 bg-[#FAFAFC]">
@@ -382,18 +704,36 @@ export function VenturesPortfolio() {
                     <p className="text-xs uppercase tracking-[0.2em] text-slate-500 font-medium mb-3">
                         Portfolio &amp; Operating Companies
                     </p>
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold font-heading text-slate-900 tracking-tight leading-tight">
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold font-heading text-slate-900 tracking-tight leading-tight mb-3">
                         Our Ventures
                     </h2>
+                    <p className="text-sm text-slate-600 max-w-lg mx-auto">
+                        Explore our high-growth operating ventures. Switch between the interactive model and the live iframe sandbox on each card.
+                    </p>
                 </motion.div>
 
                 {/* 2×2 Grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
                     {ventures.map((venture, index) => (
-                        <VentureCard key={venture.id} venture={venture} index={index} />
+                        <VentureCard
+                            key={venture.id}
+                            venture={venture}
+                            index={index}
+                            onExpand={(v) => setActiveModalVenture(v)}
+                        />
                     ))}
                 </div>
             </div>
+
+            {/* Interactive Live Sandbox Modal */}
+            <AnimatePresence>
+                {activeModalVenture && (
+                    <LiveSandboxModal
+                        venture={activeModalVenture}
+                        onClose={() => setActiveModalVenture(null)}
+                    />
+                )}
+            </AnimatePresence>
         </section>
     );
 }
