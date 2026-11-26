@@ -38,20 +38,20 @@ export function Starshift3DLogo() {
             onMouseLeave={handleMouseLeave}
             className="relative flex items-center justify-center select-none perspective-[1000px] w-full max-w-[130px] sm:max-w-[200px] md:max-w-[280px] lg:max-w-[420px] aspect-square mx-auto lg:mx-0"
         >
-            {/* Ambient Multi-Layer Backlight Glow */}
-            <div className="absolute inset-0 bg-primary/20 blur-[80px] rounded-full pointer-events-none" />
-            <div className="absolute inset-8 bg-sky-400/15 blur-[50px] rounded-full pointer-events-none" />
+            {/* Ambient Multi-Layer Backlight Glow (Cyan/Sky on White) */}
+            <div className="absolute inset-0 bg-cyan-500/15 blur-[80px] rounded-full pointer-events-none" />
+            <div className="absolute inset-8 bg-sky-400/20 blur-[50px] rounded-full pointer-events-none" />
 
             {/* Subtle Futuristic Geometric Orbit Rings */}
             <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-                className="absolute inset-2 sm:inset-4 rounded-full border border-cyan-400/10 pointer-events-none"
+                className="absolute inset-2 sm:inset-4 rounded-full border border-cyan-500/20 pointer-events-none"
             />
             <motion.div
                 animate={{ rotate: -360 }}
                 transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
-                className="absolute inset-8 sm:inset-12 rounded-full border border-white/[0.05] border-dashed pointer-events-none"
+                className="absolute inset-8 sm:inset-12 rounded-full border border-slate-300/70 border-dashed pointer-events-none"
             />
 
             {/* 3D Floating Prism Container */}
@@ -71,14 +71,14 @@ export function Starshift3DLogo() {
                 }}
                 className="relative z-10 w-full h-full flex items-center justify-center cursor-grab active:cursor-grabbing"
             >
-                {/* 3D Starshift Logo Mark from 1024x1024 asset */}
-                <div className="relative w-[72%] h-[72%] drop-shadow-[0_0_35px_rgba(0,191,255,0.4)] transition-transform duration-300 group-hover:scale-105">
+                {/* 3D Starshift Logo Mark inverted for crisp white theme */}
+                <div className="relative w-[72%] h-[72%] drop-shadow-[0_15px_35px_rgba(2,132,199,0.25)] transition-transform duration-300 group-hover:scale-105">
                     <Image
                         src="/favicon.png"
                         alt="Starshift 3D Emblem"
                         fill
                         priority
-                        className="object-contain filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.8)]"
+                        className="invert object-contain filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.15)]"
                     />
                 </div>
 
@@ -97,7 +97,7 @@ export function Starshift3DLogo() {
                     repeat: Infinity,
                     ease: "easeInOut",
                 }}
-                className="absolute -bottom-4 w-44 h-8 bg-cyan-500/20 blur-[20px] rounded-full pointer-events-none"
+                className="absolute -bottom-4 w-44 h-8 bg-slate-300/40 blur-[20px] rounded-full pointer-events-none"
             />
         </div>
     );
