@@ -8,7 +8,6 @@ import {
     MessageSquare,
     Scissors,
     TrendingUp,
-    Globe,
     Sparkles,
     Lock,
     RotateCw,
@@ -37,7 +36,7 @@ export interface Venture {
     accentColor: string;
     gradient: string;
     note?: string;
-    sameOriginRestriction?: boolean;
+    skipIframe?: boolean;
 }
 
 export const ventures: Venture[] = [
@@ -59,7 +58,7 @@ export const ventures: Venture[] = [
         displayUrl: "tinvo.starshift.in",
         accentColor: "text-sky-600",
         gradient: "from-sky-500/10 via-cyan-500/5 to-transparent",
-        sameOriginRestriction: true,
+        skipIframe: true, // Tinvo restricts cross-origin iframe embedding via SAMEORIGIN
     },
     {
         id: "swas",
@@ -133,162 +132,56 @@ function TinvoMockup() {
     }[color];
 
     return (
-        <div className="w-full h-48 rounded-xl bg-[#090D16] border border-slate-800/80 p-4 flex flex-col justify-between overflow-hidden shadow-inner">
+        <div className="w-full h-52 rounded-xl bg-[#090D16] border border-slate-800/80 p-4 flex flex-col justify-between overflow-hidden shadow-inner">
             <div className="flex items-center justify-between text-xs border-b border-white/[0.08] pb-2">
                 <span className="font-mono text-slate-400 flex items-center gap-1.5">
-                    <ShoppingBag className="w-3 h-3 text-sky-400" />
-                    <span>tinvo.store</span>
+                    <ShoppingBag className="w-3.5 h-3.5 text-sky-400" />
+                    <span>tinvo.starshift.in</span>
                 </span>
-                <span className="text-[10px] uppercase font-semibold text-sky-400/90">360° Studio</span>
+                <span className="text-[10px] uppercase font-semibold text-sky-400/90 bg-sky-950/60 px-2 py-0.5 rounded-full border border-sky-400/20">
+                    360° Studio Model
+                </span>
             </div>
 
             <div className="flex items-center justify-between py-2">
                 <div className="space-y-0.5">
                     <p className="text-[10px] text-slate-400 uppercase tracking-wider">Stainless Tumbler 750ml</p>
                     <p className="text-sm font-semibold text-white">{cfg.label}</p>
-                    <p className="text-[11px] text-sky-400">In Stock</p>
+                    <p className="text-[11px] text-sky-400">Live D2C Inventory</p>
                 </div>
                 <motion.div
                     key={color}
                     initial={{ scale: 0.92, opacity: 0.7 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 0.2 }}
-                    className={`w-9 h-[72px] rounded-lg bg-gradient-to-b ${cfg.grad} border ${cfg.border} flex items-center justify-center shadow-lg`}
+                    className={`w-10 h-20 rounded-lg bg-gradient-to-b ${cfg.grad} border ${cfg.border} flex items-center justify-center shadow-lg`}
                 >
-                    <span className={`text-[8px] font-mono font-bold tracking-wider rotate-90 select-none ${color === "frost" ? "text-slate-900" : "text-white"}`}>
+                    <span className={`text-[9px] font-mono font-bold tracking-wider rotate-90 select-none ${color === "frost" ? "text-slate-900" : "text-white"}`}>
                         TINVO
                     </span>
                 </motion.div>
             </div>
 
-            <div className="flex items-center gap-2 pt-2 border-t border-white/[0.08]">
-                {(["cyan", "dark", "frost"] as const).map((c) => (
-                    <button
-                        key={c}
-                        type="button"
-                        onClick={() => setColor(c)}
-                        className={`w-3 h-3 rounded-full cursor-pointer transition-all ${
-                            c === "cyan" ? "bg-cyan-400" : c === "dark" ? "bg-zinc-600" : "bg-slate-200"
-                        } ${color === c ? "ring-[1.5px] ring-white scale-110" : "opacity-40 hover:opacity-70"}`}
-                    />
-                ))}
-            </div>
-        </div>
-    );
-}
-
-function SwasMockup() {
-    return (
-        <div className="w-full h-48 rounded-xl bg-[#061410] border border-emerald-500/20 p-4 flex flex-col justify-between overflow-hidden shadow-inner">
-            <div className="flex items-center justify-between text-xs border-b border-emerald-500/15 pb-2">
-                <span className="font-mono text-emerald-400 flex items-center gap-1.5 font-medium">
-                    <MessageSquare className="w-3 h-3 text-emerald-400" />
-                    <span>SWAS Engine</span>
-                </span>
-                <span className="text-[10px] text-emerald-400 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">Connected</span>
-            </div>
-
-            <div className="space-y-1.5 py-1 text-xs">
-                <div className="bg-emerald-950/60 border border-emerald-500/20 rounded-lg p-2 max-w-[85%]">
-                    <p className="text-[10px] text-emerald-400 font-medium mb-0.5">Campaign: Festive Broadcast</p>
-                    <p className="text-[11px] text-slate-200">Hi Alex! Your VIP access link is ready.</p>
-                </div>
-                <div className="bg-white/[0.04] border border-white/[0.08] rounded-lg p-2 max-w-[78%] ml-auto text-right">
-                    <p className="text-[11px] text-slate-200">Awesome! Just completed checkout.</p>
-                    <span className="text-[9px] text-emerald-400 font-mono">✓✓ Delivered</span>
-                </div>
-            </div>
-
-            <div className="flex items-center justify-between pt-2 border-t border-emerald-500/15 text-[10px] text-slate-400">
-                <span>2,480 / 2,500 sent</span>
-                <span className="text-emerald-400 font-mono font-semibold">99.2%</span>
-            </div>
-        </div>
-    );
-}
-
-function DadashriMockup() {
-    return (
-        <div className="w-full h-48 rounded-xl bg-[#140F08] border border-amber-500/20 p-4 flex flex-col justify-between overflow-hidden shadow-inner">
-            <div className="flex items-center justify-between text-xs border-b border-amber-500/15 pb-2">
-                <span className="font-mono text-amber-400 flex items-center gap-1.5 font-medium">
-                    <Scissors className="w-3 h-3 text-amber-400" />
-                    <span>Tailor Suite</span>
-                </span>
-                <span className="text-[10px] text-amber-400 font-semibold bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">Order #DD-492</span>
-            </div>
-
-            <div className="py-1">
-                <div className="flex items-center justify-between text-xs mb-1.5">
-                    <span className="font-semibold text-white text-[11px]">Vikram K. Singhania</span>
-                    <span className="text-[9px] text-amber-400 font-medium bg-amber-500/15 px-1.5 py-0.5 rounded border border-amber-500/30">In Stitching</span>
-                </div>
-                <div className="grid grid-cols-4 gap-1 p-2 rounded-lg bg-black/40 border border-amber-500/15 text-center text-[10px]">
-                    {[
-                        ["Chest", "41.5\""],
-                        ["Waist", "35.0\""],
-                        ["Length", "30.5\""],
-                        ["Sleeve", "25.2\""],
-                    ].map(([label, val]) => (
-                        <div key={label}>
-                            <span className="text-slate-400 block text-[9px]">{label}</span>
-                            <span className="font-mono font-semibold text-slate-200">{val}</span>
-                        </div>
+            <div className="flex items-center justify-between pt-2 border-t border-white/[0.08]">
+                <div className="flex items-center gap-2">
+                    {(["cyan", "dark", "frost"] as const).map((c) => (
+                        <button
+                            key={c}
+                            type="button"
+                            onClick={() => setColor(c)}
+                            className={`w-3.5 h-3.5 rounded-full cursor-pointer transition-all ${
+                                c === "cyan" ? "bg-cyan-400" : c === "dark" ? "bg-zinc-600" : "bg-slate-200"
+                            } ${color === c ? "ring-2 ring-white scale-110" : "opacity-40 hover:opacity-70"}`}
+                        />
                     ))}
                 </div>
-            </div>
-
-            <div className="flex items-center justify-between pt-2 border-t border-amber-500/15 text-[10px] text-slate-400">
-                <span>3-Piece Tuxedo</span>
-                <span className="text-amber-400 font-semibold">Nov 28</span>
+                <span className="text-[10px] text-slate-400 font-mono">Interactive Swatch</span>
             </div>
         </div>
     );
 }
 
-function AlgoMockup() {
-    return (
-        <div className="w-full h-48 rounded-xl bg-[#080E1A] border border-blue-500/20 p-4 flex flex-col justify-between overflow-hidden shadow-inner">
-            <div className="flex items-center justify-between text-xs border-b border-blue-500/15 pb-2">
-                <span className="font-mono text-blue-400 flex items-center gap-1.5 font-medium">
-                    <TrendingUp className="w-3 h-3 text-blue-400" />
-                    <span>VWAP Engine</span>
-                </span>
-                <span className="text-[10px] text-blue-400 font-semibold bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">Running</span>
-            </div>
-
-            <div className="py-1">
-                <div className="flex items-center justify-between text-xs mb-1">
-                    <span className="font-mono font-semibold text-white text-[11px]">NIFTY_FUT 24,480.50</span>
-                    <span className="font-mono text-[9px] text-emerald-400 font-semibold">+0.65%</span>
-                </div>
-                <div className="h-14 w-full">
-                    <svg className="w-full h-full overflow-visible" viewBox="0 0 280 46">
-                        <line x1="0" y1="12" x2="280" y2="12" stroke="rgba(255,255,255,0.06)" strokeDasharray="2 2" />
-                        <line x1="0" y1="34" x2="280" y2="34" stroke="rgba(255,255,255,0.06)" strokeDasharray="2 2" />
-                        <path d="M 0 30 Q 70 26, 140 22 T 280 16" fill="none" stroke="#38bdf8" strokeWidth="1.5" strokeDasharray="3 2" opacity="0.6" />
-                        <path d="M 0 36 L 40 32 L 80 38 L 120 26 L 160 28 L 200 16 L 240 20 L 280 12" fill="none" stroke="#34d399" strokeWidth="2" />
-                        <circle cx="280" cy="12" r="3" fill="#34d399" />
-                    </svg>
-                </div>
-            </div>
-
-            <div className="flex items-center justify-between pt-2 border-t border-blue-500/15 text-[10px] text-slate-400">
-                <span className="font-mono">LONG <span className="text-emerald-400 font-semibold">(VWAP Cross)</span></span>
-                <span className="font-mono">8ms</span>
-            </div>
-        </div>
-    );
-}
-
-const mockupMap: Record<string, React.ComponentType> = {
-    tinvo: TinvoMockup,
-    swas: SwasMockup,
-    dadashri: DadashriMockup,
-    "starshift-algo": AlgoMockup,
-};
-
-/* ─── Live Iframe Card (Card View) ─── */
+/* ─── Direct Live Iframe Container ─── */
 
 function LiveIframeCard({
     venture,
@@ -306,7 +199,7 @@ function LiveIframeCard({
     };
 
     return (
-        <div className="w-full h-48 rounded-xl bg-slate-950 border border-slate-700/80 overflow-hidden shadow-md flex flex-col">
+        <div className="w-full h-52 rounded-xl bg-slate-950 border border-slate-700/80 overflow-hidden shadow-md flex flex-col">
             {/* Browser top chrome */}
             <div className="flex items-center justify-between px-3 py-1.5 bg-slate-900 border-b border-slate-800 text-xs">
                 {/* Window control dots */}
@@ -327,7 +220,7 @@ function LiveIframeCard({
                     <button
                         type="button"
                         onClick={handleReload}
-                        title="Reload preview"
+                        title="Reload live frame"
                         className="p-1 hover:text-white rounded hover:bg-slate-800 transition cursor-pointer"
                     >
                         <RotateCw className={`w-2.5 h-2.5 ${isLoading ? "animate-spin text-cyan-400" : ""}`} />
@@ -344,7 +237,7 @@ function LiveIframeCard({
                         href={venture.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        title="Open in new tab"
+                        title="Open in new window"
                         className="p-1 hover:text-white rounded hover:bg-slate-800 transition cursor-pointer"
                     >
                         <ExternalLink className="w-2.5 h-2.5" />
@@ -361,27 +254,10 @@ function LiveIframeCard({
                     </div>
                 )}
 
-                {venture.sameOriginRestriction && (
-                    <div className="absolute bottom-1.5 left-1.5 right-1.5 z-20 px-2 py-1 rounded bg-amber-950/90 border border-amber-500/40 text-amber-200 text-[9px] flex items-center justify-between gap-1 shadow-md backdrop-blur-xs">
-                        <span className="truncate flex items-center gap-1">
-                            <AlertCircle className="w-3 h-3 text-amber-400 shrink-0" />
-                            TINVO specifies SAMEORIGIN header.
-                        </span>
-                        <a
-                            href={venture.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="font-semibold text-amber-300 underline shrink-0 hover:text-white"
-                        >
-                            Open Direct ↗
-                        </a>
-                    </div>
-                )}
-
                 <iframe
                     key={reloadKey}
                     src={venture.url}
-                    title={`${venture.name} Live View`}
+                    title={`${venture.name} Live Viewport`}
                     loading="lazy"
                     sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
                     className="w-full h-full border-0 bg-white"
@@ -501,17 +377,17 @@ function LiveSandboxModal({
                     </div>
                 </div>
 
-                {/* Sub-bar: URL & Warning if any */}
+                {/* Sub-bar: URL */}
                 <div className="flex items-center justify-between px-4 py-1.5 bg-slate-950 border-b border-slate-800 text-[11px] text-slate-400">
                     <div className="flex items-center gap-2 truncate">
                         <Lock className="w-3 h-3 text-emerald-400 shrink-0" />
                         <span className="font-mono text-slate-300 truncate">{venture.url}</span>
                     </div>
 
-                    {venture.sameOriginRestriction && (
+                    {venture.skipIframe && (
                         <div className="text-amber-300 text-[10px] flex items-center gap-1 font-medium bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
                             <AlertCircle className="w-3 h-3 text-amber-400" />
-                            <span>TINVO enforces SAMEORIGIN. If blocked, open via button above.</span>
+                            <span>TINVO specifies SAMEORIGIN header. Click &quot;Open New Window&quot; above to view live.</span>
                         </div>
                     )}
                 </div>
@@ -554,8 +430,6 @@ function VentureCard({
 }) {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: "-60px" });
-    const [mode, setMode] = useState<"mockup" | "iframe">("mockup");
-    const Mockup = mockupMap[venture.id];
 
     return (
         <motion.div
@@ -569,7 +443,7 @@ function VentureCard({
             <div className={`absolute inset-0 bg-gradient-to-br ${venture.gradient} pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
 
             <div className="relative z-10 flex flex-col h-full">
-                {/* Meta bar & Mode Switcher */}
+                {/* Meta bar */}
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
                         <span className="font-mono text-[11px] text-slate-400 font-semibold">{venture.number}</span>
@@ -578,41 +452,24 @@ function VentureCard({
                         </span>
                     </div>
 
-                    {/* View Switcher: Overview vs Live Iframe */}
-                    <div className="inline-flex items-center p-0.5 rounded-lg bg-slate-100 border border-slate-200/80 text-[11px] font-medium text-slate-600">
-                        <button
-                            type="button"
-                            onClick={() => setMode("mockup")}
-                            className={`flex items-center gap-1 px-2 py-0.5 rounded-md transition-all cursor-pointer ${
-                                mode === "mockup"
-                                    ? "bg-white text-slate-900 shadow-xs font-semibold"
-                                    : "hover:text-slate-900 text-slate-500"
-                            }`}
-                            title="Interactive product overview"
-                        >
-                            <Sparkles className="w-2.5 h-2.5 text-cyan-600" />
-                            <span>Preview</span>
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setMode("iframe")}
-                            className={`flex items-center gap-1 px-2 py-0.5 rounded-md transition-all cursor-pointer ${
-                                mode === "iframe"
-                                    ? "bg-white text-slate-900 shadow-xs font-semibold"
-                                    : "hover:text-slate-900 text-slate-500"
-                            }`}
-                            title="Live app iframe sandbox"
-                        >
-                            <Globe className="w-2.5 h-2.5 text-sky-600" />
-                            <span>Live Iframe</span>
-                        </button>
-                    </div>
+                    {/* Badge: Live Iframe vs 3D Studio */}
+                    {venture.skipIframe ? (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-medium text-sky-600 bg-sky-50 px-2 py-0.5 rounded-full border border-sky-200/80">
+                            <Sparkles className="w-2.5 h-2.5 text-sky-500" />
+                            <span>Interactive Model</span>
+                        </span>
+                    ) : (
+                        <span className="inline-flex items-center gap-1.5 text-[10px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/80">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            <span>Direct Live Frame</span>
+                        </span>
+                    )}
                 </div>
 
-                {/* Preview Container (Mockup or Live Iframe) */}
+                {/* Direct Viewport Container */}
                 <div className="mb-5">
-                    {mode === "mockup" && Mockup ? (
-                        <Mockup />
+                    {venture.skipIframe ? (
+                        <TinvoMockup />
                     ) : (
                         <LiveIframeCard venture={venture} onExpand={() => onExpand(venture)} />
                     )}
@@ -708,7 +565,7 @@ export function VenturesPortfolio() {
                         Our Ventures
                     </h2>
                     <p className="text-sm text-slate-600 max-w-lg mx-auto">
-                        Explore our high-growth operating ventures. Switch between the interactive model and the live iframe sandbox on each card.
+                        Explore our operating companies with direct live embedded webviews and interactive product environments.
                     </p>
                 </motion.div>
 
